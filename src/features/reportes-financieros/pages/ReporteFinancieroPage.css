@@ -1,0 +1,158 @@
+.reporte-financiero {
+  display: grid;
+  gap: var(--espacio-6);
+  min-width: 0;
+  color: var(--color-texto);
+}
+
+.reporte-financiero__encabezado h1 {
+  margin: 0;
+  font-size: var(--texto-titulo);
+}
+
+.reporte-financiero__encabezado p {
+  margin: var(--espacio-2) 0 0;
+  color: var(--color-texto-secundario);
+  line-height: 1.5;
+}
+
+.reporte-financiero__fechas {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: var(--espacio-4);
+  min-width: 0;
+  padding: var(--espacio-4);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-superficie);
+}
+
+.reporte-financiero__periodo,
+.reporte-financiero__explicacion {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.reporte-financiero__periodo {
+  color: var(--color-texto-secundario);
+}
+
+.reporte-financiero__periodo strong {
+  color: var(--color-texto);
+}
+
+.reporte-financiero__resumen {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-4);
+}
+
+.reporte-financiero__resumen > * {
+  min-width: 0;
+}
+
+.reporte-financiero__resumen p {
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.reporte-financiero__tarjeta {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-superficie);
+}
+
+.reporte-financiero__tarjeta h2 {
+  margin: 0;
+  padding: var(--espacio-4);
+  background: var(--azul-base);
+  color: var(--color-superficie);
+  font-size: var(--texto-subtitulo);
+}
+
+.reporte-financiero__tarjeta dl {
+  margin: 0;
+  padding: var(--espacio-2) var(--espacio-4);
+}
+
+.reporte-financiero__tarjeta dl > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--espacio-2) var(--espacio-4);
+  padding: var(--espacio-4) 0;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.reporte-financiero__tarjeta dl > div:last-child {
+  border-bottom: 0;
+}
+
+.reporte-financiero__tarjeta dt {
+  color: var(--color-texto-secundario);
+}
+
+.reporte-financiero__tarjeta dd {
+  margin: 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.reporte-financiero__total dt,
+.reporte-financiero__total dd {
+  color: var(--color-texto);
+  font-weight: 700;
+}
+
+.reporte-financiero__nota {
+  margin: 0;
+  padding: var(--espacio-4);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-control);
+  background: var(--color-superficie);
+  color: var(--color-texto-secundario);
+  line-height: 1.5;
+}
+
+@media (min-width: 640px) {
+  .reporte-financiero__fechas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: var(--espacio-6);
+  }
+
+  .reporte-financiero__fechas > button {
+    justify-self: start;
+  }
+
+  .reporte-financiero__resumen {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .reporte-financiero__tarjeta h2 {
+    padding-inline: var(--espacio-6);
+  }
+
+  .reporte-financiero__tarjeta dl {
+    padding-inline: var(--espacio-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .reporte-financiero__fechas {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+  }
+
+  .reporte-financiero__fechas > button {
+    align-self: start;
+    margin-top: calc(1.5rem + var(--espacio-2));
+  }
+
+  .reporte-financiero__resumen {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

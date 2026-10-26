@@ -1,0 +1,150 @@
+.inscripcion {
+  display: grid;
+  gap: var(--espacio-4);
+}
+
+.inscripcion__progreso {
+  margin: 0;
+  padding: var(--espacio-3) var(--espacio-4);
+  border-radius: var(--radio-control);
+  color: var(--azul-base);
+  background: var(--azul-claro);
+  font-weight: 600;
+}
+
+.inscripcion__tarjeta {
+  display: grid;
+  gap: var(--espacio-6);
+  min-width: 0;
+  padding: var(--espacio-4);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-superficie);
+}
+
+.inscripcion__tarjeta h2,
+.inscripcion__apoderado h3 {
+  margin: 0;
+  color: var(--color-texto);
+}
+
+.inscripcion__tarjeta h2 {
+  font-size: var(--texto-subtitulo);
+}
+
+.inscripcion__apoderado h3 {
+  font-size: var(--texto-normal);
+}
+
+.inscripcion__campos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--espacio-4);
+}
+
+.inscripcion__apoderado {
+  display: grid;
+  justify-items: start;
+  gap: var(--espacio-4);
+  min-width: 0;
+  padding: var(--espacio-4);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-control);
+  background: var(--color-fondo);
+}
+
+.inscripcion__apoderado > .campo,
+.inscripcion__apoderado > .inscripcion__campos {
+  width: 100%;
+}
+
+.inscripcion__seleccion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-3) var(--espacio-6);
+  min-width: 0;
+  margin: 0;
+  padding: var(--espacio-4);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-control);
+}
+
+.inscripcion__seleccion legend {
+  padding-inline: var(--espacio-2);
+  font-weight: 600;
+}
+
+.inscripcion__seleccion label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  min-height: var(--altura-control);
+  cursor: pointer;
+}
+
+.inscripcion__seleccion input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--azul-base);
+}
+
+.inscripcion__datos {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.inscripcion__resumen {
+  margin: 0;
+  color: var(--color-texto-secundario);
+  overflow-wrap: anywhere;
+}
+
+.inscripcion__acciones {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--espacio-3);
+}
+
+.inscripcion__acciones .boton {
+  flex: 1;
+}
+
+.inscripcion__error,
+.inscripcion__confirmacion {
+  margin: 0;
+  padding: var(--espacio-4);
+  border: 1px solid;
+  border-radius: var(--radio-control);
+  overflow-wrap: anywhere;
+}
+
+.inscripcion__error {
+  border-color: var(--rojo-base);
+  color: var(--rojo-base);
+  background: var(--rojo-claro);
+}
+
+.inscripcion__confirmacion {
+  border-color: var(--verde-base);
+  color: var(--verde-base);
+  background: var(--verde-claro);
+}
+
+@media (min-width: 640px) {
+  .inscripcion__tarjeta {
+    padding: var(--espacio-6);
+  }
+
+  .inscripcion__campos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .inscripcion__acciones .boton {
+    flex: initial;
+  }
+}

@@ -31,6 +31,10 @@ export function PanelLayout({
   grupos,
 }: PanelLayoutProps) {
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const { pathname } = useLocation();
+  const [gruposExpandidos, setGruposExpandidos] = useState<
+    Record<string, boolean>
+  >({});
 
   const abrirRef = useRef<HTMLButtonElement>(null);
   const cerrarRef = useRef<HTMLButtonElement>(null);
@@ -41,7 +45,22 @@ export function PanelLayout({
   const navegacionId = `${identificador}-navegacion`;
   const contenidoId = `${identificador}-contenido`;
 
-  const { pathname } = useLocation();
+  const rutaPerteneceAlGrupo = (ruta: string) =>
+    pathname === ruta || pathname.startsWith(`${ruta}/`);
+
+  const tituloGrupoActivo = grupos.find((grupo) =>
+    grupo.enlaces.some((enlace) => rutaPerteneceAlGrupo(enlace.ruta)),
+  )?.titulo;
+
+  useEffect(() => {
+    if (!tituloGrupoActivo) return;
+
+    setGruposExpandidos((actuales) =>
+      actuales[tituloGrupoActivo]
+        ? actuales
+        : { ...actuales, [tituloGrupoActivo]: true },
+    );
+  }, [pathname, tituloGrupoActivo]);
 
   const titulo =
     grupos
@@ -123,6 +142,13 @@ export function PanelLayout({
     };
   }, [menuAbierto]);
 
+  function alternarGrupo(tituloGrupo: string) {
+    setGruposExpandidos((actuales) => ({
+      ...actuales,
+      [tituloGrupo]: !actuales[tituloGrupo],
+    }));
+  }
+
   function cerrarMenu() {
     setMenuAbierto(false);
   }
@@ -180,21 +206,64 @@ export function PanelLayout({
             Inicio
           </NavLink>
 
-          {grupos.map((grupo) => (
-            <div className="panel-layout__grupo" key={grupo.titulo}>
-              <h2>{grupo.titulo}</h2>
+          {grupos.map((grupo, indice) => {
+            const expandido = Boolean(gruposExpandidos[grupo.titulo]);
+            const grupoId = `${identificador}-grupo-${indice}`;
 
-              <ul>
-                {grupo.enlaces.map((enlace) => (
-                  <li key={enlace.ruta}>
-                    <NavLink to={enlace.ruta} end onClick={cerrarMenu}>
-                      {enlace.texto}
-                    </NavLink>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+            return (
+              <section className="panel-layout__grupo" key={grupo.titulo}>
+                <h2 className="panel-layout__grupo-heading">
+                  <button
+                    className="panel-layout__grupo-toggle"
+                    type="button"
+                    aria-expanded={expandido}
+                    aria-controls={grupoId}
+                    onClick={() => alternarGrupo(grupo.titulo)}
+                  >
+                    <span>{grupo.titulo}</span>
+                    <svg
+                      className={`panel-layout__chevron ${
+                        expandido ? "panel-layout__chevron--abierto" : ""
+                      }`}
+                      viewBox="0 0 20 20"
+                      width="18"
+                      height="18"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path
+                        d="m5 7.5 5 5 5-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </h2>
+
+                <div
+                  id={grupoId}
+                  className={`panel-layout__grupo-panel ${
+                    expandido ? "panel-layout__grupo-panel--abierto" : ""
+                  }`}
+                  aria-hidden={!expandido}
+                  inert={!expandido}
+                >
+                  <ul>
+                    {grupo.enlaces.map((enlace) => (
+                      <li key={enlace.ruta}>
+                        <NavLink to={enlace.ruta} end onClick={cerrarMenu}>
+                          {enlace.texto}
+                        </NavLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </section>
+            );
+          })}
         </nav>
 
         <div className="panel-layout__sidebar-account">

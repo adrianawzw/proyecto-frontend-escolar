@@ -2,38 +2,144 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--color-fondo);
 }
 
 .login-page__presentacion {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 2rem;
   padding: clamp(2rem, 5vw, 5rem);
   color: #fff;
   background:
-    radial-gradient(circle at 25% 65%, #3459a2 0%, transparent 45%),
-    linear-gradient(120deg, #204589, #162039);
+    radial-gradient(ellipse at 18% 72%, rgb(52 89 162 / 78%) 0%, transparent 48%),
+    radial-gradient(ellipse at 90% 12%, rgb(194 65 12 / 16%) 0%, transparent 35%),
+    linear-gradient(135deg, var(--azul-base) 0%, #1a3769 56%, #162039 100%);
+}
+
+.login-page__presentacion::before,
+.login-page__presentacion::after {
+  position: absolute;
+  z-index: -1;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.login-page__presentacion::before {
+  width: 28rem;
+  height: 28rem;
+  right: -12rem;
+  top: 18%;
+}
+
+.login-page__presentacion::after {
+  width: 39rem;
+  height: 39rem;
+  right: -17rem;
+  top: 10%;
 }
 
 .login-page__marca {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.85rem;
   font-size: clamp(1.25rem, 2.3vw, 2rem);
   font-weight: 700;
+  letter-spacing: -0.025em;
 }
 
 .login-page__simbolo {
   display: grid;
+  flex: 0 0 auto;
   place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 2px solid currentColor;
-  border-radius: 0.75rem;
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 1px solid rgb(255 255 255 / 32%);
+  border-radius: 0.9rem;
+  background: rgb(255 255 255 / 10%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 12%);
+}
+
+.login-page__ilustracion {
+  position: relative;
+  display: grid;
+  flex: 1 1 auto;
+  place-items: center;
+  width: min(100%, 36rem);
+  min-height: 15rem;
+  margin: 0 auto;
+}
+
+.login-page__ilustracion-halo {
+  position: absolute;
+  width: min(80%, 23rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 7%);
+  box-shadow: 0 0 0 2.2rem rgb(255 255 255 / 2.5%);
+}
+
+.login-page__escuela {
+  position: relative;
+  width: 100%;
+  max-height: 21rem;
+  filter: drop-shadow(0 1.2rem 1.5rem rgb(5 16 39 / 18%));
+}
+
+.login-page__nota {
+  position: absolute;
+  right: 0;
+  bottom: 5%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 19rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 1rem;
+  background: rgb(255 255 255 / 12%);
+  box-shadow: 0 1rem 2.5rem rgb(5 16 39 / 15%);
+  backdrop-filter: blur(12px);
+}
+
+.login-page__nota-icono {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.7rem;
+  background: var(--naranja-base);
+  color: #fff;
+  font-weight: 800;
+}
+
+.login-page__nota strong,
+.login-page__nota small {
+  display: block;
+}
+
+.login-page__nota strong {
+  font-size: 0.875rem;
+}
+
+.login-page__nota small {
+  margin-top: 0.15rem;
+  color: #dce6fa;
+  font-size: 0.75rem;
+  line-height: 1.4;
 }
 
 .login-page__mensaje {
-  max-width: 32rem;
+  max-width: 33rem;
+  padding-top: 1rem;
 }
 
 .login-page__mensaje p,
@@ -41,58 +147,167 @@
   color: #dce6fa;
 }
 
+.login-page__mensaje p {
+  margin: 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.025em;
+}
+
 .login-page__mensaje h2 {
   margin: 0.75rem 0 0;
   font-size: clamp(2rem, 4vw, 3.75rem);
   line-height: 1.1;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
 }
 
 .login-page__pie {
   margin: 0;
   font-size: 0.875rem;
+  color: rgb(220 230 250 / 78%);
 }
 
 .login-page__acceso {
   display: grid;
   place-items: center;
-  padding: 3rem 1.5rem;
-  background: #f8fafc;
+  padding: clamp(2rem, 5vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+  background:
+    radial-gradient(circle at 100% 0%, rgb(239 246 255 / 85%) 0%, transparent 32%),
+    var(--color-fondo);
 }
 
 .login-page__contenido {
   width: min(100%, 27rem);
+  animation: login-aparecer 450ms ease-out both;
+}
+
+.login-page__sello {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #d7e4f8;
+  border-radius: 1rem;
+  background: var(--azul-claro);
+  color: var(--azul-base);
 }
 
 .login-page__etiqueta {
-  margin: 0 0 1rem;
-  color: #315797;
+  margin: 0 0 0.65rem;
+  color: var(--azul-base);
   font-size: 0.875rem;
   font-weight: 700;
+  letter-spacing: 0.025em;
 }
 
 .login-page__contenido h1 {
   margin: 0;
   color: #101b32;
   font-size: clamp(2.25rem, 4vw, 3.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.045em;
 }
 
 .login-page__descripcion {
-  margin: 0.75rem 0 2.5rem;
-  color: #617087;
+  margin: 0.85rem 0 2.25rem;
+  color: var(--color-texto-secundario);
 }
 
 .login-page__formulario {
   display: grid;
-  gap: var(--espacio-6);
+  gap: 1.35rem;
+}
+
+.login-page__formulario .campo__etiqueta {
+  margin-bottom: 0.5rem;
+  color: #26364e;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.login-page__formulario #correo,
+.login-page__formulario #contrasena {
+  min-height: 3.25rem;
+  padding-left: 3rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.8rem;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-position: 1rem center;
+  background-size: 1.1rem 1.1rem;
+  color: var(--color-texto);
+  box-shadow: 0 1px 2px rgb(15 23 42 / 3%);
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.login-page__formulario #correo {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2361748b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpath d='m3 7 9 6 9-6'/%3E%3C/svg%3E");
+}
+
+.login-page__formulario #contrasena {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2361748b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='10' width='16' height='11' rx='2'/%3E%3Cpath d='M8 10V7a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E");
+}
+
+.login-page__formulario #correo:hover:not(:disabled),
+.login-page__formulario #contrasena:hover:not(:disabled) {
+  border-color: #94a3b8;
+}
+
+.login-page__formulario #correo:focus,
+.login-page__formulario #contrasena:focus {
+  border-color: var(--azul-base);
+  outline: none;
+  box-shadow: 0 0 0 4px rgb(32 69 137 / 12%);
+}
+
+.login-page__formulario #correo[aria-invalid="true"],
+.login-page__formulario #contrasena[aria-invalid="true"] {
+  border-color: var(--rojo-base);
+  background-color: #fffafa;
+  box-shadow: 0 0 0 3px rgb(185 28 28 / 8%);
+}
+
+.login-page__formulario #correo:disabled,
+.login-page__formulario #contrasena:disabled {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.login-page__formulario > .boton {
+  width: 100%;
+  min-height: 3.25rem;
+  margin-top: 0.35rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 8px 18px rgb(154 52 18 / 15%);
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.login-page__formulario > .boton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px rgb(154 52 18 / 20%);
+}
+
+.login-page__formulario > .boton[aria-busy="true"]::before {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  content: "";
+  animation: login-girar 700ms linear infinite;
 }
 
 .login-page__error {
   margin: 0;
   padding: var(--espacio-3);
-  border: 1px solid var(--rojo-base);
-  border-radius: var(--radio-control);
+  border: 1px solid #fecaca;
+  border-radius: 0.8rem;
   color: var(--rojo-base);
   background: var(--rojo-claro);
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .login-page__contrasena {
@@ -128,14 +343,12 @@
   align-self: center;
   justify-self: end;
   z-index: 1;
-
   display: grid;
   place-items: center;
   width: 44px;
   height: 44px;
   margin: 0 2px 0 0;
   padding: 0;
-
   border: 0;
   border-radius: var(--radio-control);
   background: transparent;
@@ -163,32 +376,49 @@
   height: 22px;
 }
 
+@keyframes login-aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes login-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 760px) {
   .login-page {
     display: block;
     min-height: 100dvh;
-    background: #f8fafc;
+    background: var(--color-fondo);
   }
 
   .login-page__presentacion {
-    min-height: 6.5rem;
-    padding: 1.1rem 1.25rem 2rem;
+    min-height: 7rem;
+    padding: 1.25rem 1.25rem 2rem;
   }
 
   .login-page__marca {
-    gap: 0.6rem;
-    margin: 1rem;
-    font-size: 1rem;
+    gap: 0.65rem;
+    margin: 0.25rem 0;
+    font-size: 1.05rem;
     line-height: 1.2;
   }
 
   .login-page__simbolo {
-    flex-shrink: 0;
-    width: 1.8rem;
-    height: 1.8rem;
-    border-radius: 0.5rem;
+    width: 2.35rem;
+    height: 2.35rem;
+    border-radius: 0.7rem;
   }
 
+  .login-page__ilustracion,
   .login-page__mensaje,
   .login-page__pie {
     display: none;
@@ -197,10 +427,11 @@
   .login-page__acceso {
     position: relative;
     display: block;
-    min-height: calc(100dvh - 5.25rem);
+    min-height: calc(100dvh - 5.75rem);
     margin-top: -1.25rem;
     padding: clamp(2rem, 7vh, 4rem) 1.5rem 3rem;
-    background: #f8fafc;
+    border-radius: 1.5rem 1.5rem 0 0;
+    background: var(--color-fondo);
   }
 
   .login-page__contenido {
@@ -208,7 +439,34 @@
     margin-inline: auto;
   }
 
+  .login-page__sello {
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-bottom: 1.25rem;
+  }
+
   .login-page__descripcion {
     margin-bottom: 2rem;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1050px) {
+  .login-page__presentacion {
+    padding: 2.5rem;
+  }
+
+  .login-page__nota {
+    right: -0.5rem;
+    bottom: 2%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-page__contenido {
+    animation: none;
+  }
+
+  .login-page__formulario > .boton[aria-busy="true"]::before {
+    animation-duration: 1.5s;
   }
 }

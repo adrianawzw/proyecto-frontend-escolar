@@ -13,6 +13,109 @@ export interface GrupoNavegacion {
   enlaces: readonly EnlacePanel[];
 }
 
+function IconoMenu({ nombre }: { nombre: string }) {
+  const props = {
+    width: 19,
+    height: 19,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.7,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true as const,
+    focusable: false as const,
+  };
+
+  const iconos: Record<string, ReactNode> = {
+    Inicio: (
+      <>
+        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+      </>
+    ),
+    Estudiantes: (
+      <>
+        <circle cx="9" cy="8" r="3.5" />
+        <path d="M3 20v-1a6 6 0 0 1 12 0v1" />
+        <path d="M16 5.5a3.5 3.5 0 0 1 0 6.5M18 14a5 5 0 0 1 3 4.5V20" />
+      </>
+    ),
+    "Nueva matrícula": (
+      <>
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <path d="M14 2v6h6M12 12v6M9 15h6" />
+      </>
+    ),
+    "Matrículas registradas": (
+      <>
+        <rect x="4" y="4" width="16" height="17" rx="2" />
+        <path d="M8 2v4M16 2v4M8 11h8M8 15h5" />
+      </>
+    ),
+    "Cursos y competencias": (
+      <>
+        <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z" />
+        <path d="M4 4.5v17M8 6h8M8 10h8" />
+      </>
+    ),
+    "Boletas de notas": (
+      <>
+        <path d="M3 3v18h18" />
+        <path d="m7 14 4-4 3 3 6-7" />
+      </>
+    ),
+    Docentes: (
+      <>
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 21a8 8 0 0 1 16 0M18 4l2 2-2 2" />
+      </>
+    ),
+    "Pagos a docentes": (
+      <>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="M3 10h18M7 15h4" />
+      </>
+    ),
+    Pensiones: (
+      <>
+        <path d="M6 2h9l5 5v15H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" />
+        <path d="M14 2v6h6M8 13h8M8 17h6" />
+      </>
+    ),
+    "Movimientos adicionales": (
+      <>
+        <path d="M7 7h14l-4-4M17 17H3l4 4" />
+        <path d="M21 7v4M3 17v-4" />
+      </>
+    ),
+    "Reportes financieros": (
+      <>
+        <path d="M3 3v18h18" />
+        <rect x="7" y="12" width="3" height="5" rx="0.5" />
+        <rect x="13" y="8" width="3" height="9" rx="0.5" />
+        <rect x="19" y="5" width="2" height="12" rx="0.5" />
+      </>
+    ),
+    "Mis cursos": (
+      <>
+        <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z" />
+        <path d="M4 4.5v17M8 7h8M8 11h8" />
+      </>
+    ),
+  };
+
+  return (
+    <svg {...props}>
+      {iconos[nombre] ?? (
+        <circle cx="12" cy="12" r="8" />
+      )}
+    </svg>
+  );
+}
+
 interface PanelLayoutProps {
   children: ReactNode;
   onLogout: () => void;
@@ -203,6 +306,7 @@ export function PanelLayout({
           aria-label={`Navegación: ${nombreRol}`}
         >
           <NavLink to={rutaInicio} end onClick={cerrarMenu}>
+            <IconoMenu nombre="Inicio"/>
             Inicio
           </NavLink>
 
@@ -255,6 +359,7 @@ export function PanelLayout({
                     {grupo.enlaces.map((enlace) => (
                       <li key={enlace.ruta}>
                         <NavLink to={enlace.ruta} end onClick={cerrarMenu}>
+                          <IconoMenu nombre={enlace.texto}/>
                           {enlace.texto}
                         </NavLink>
                       </li>

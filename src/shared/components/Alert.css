@@ -1,0 +1,105 @@
+@charset "UTF-8";
+
+/* Layout */
+
+.dpF {
+    display: flex;
+}
+
+.jcFE {
+    justify-content: flex-end;
+}
+
+.g10 {
+    gap: 10px;
+}
+
+/* Dimensiones */
+
+.bsBox {
+    box-sizing: border-box;
+}
+
+.wAlerta {
+    width: min(92vw, 400px);
+}
+
+.pd20 {
+    padding: 20px;
+}
+
+.m0-8 {
+    margin: 0 0 8px;
+}
+
+.m0-20 {
+    margin: 0 0 20px;
+}
+
+.bdN {
+    border: none;
+}
+
+.br14 {
+    border-radius: 14px;
+}
+
+/* Texto */
+
+.fs11 {
+    font-size: 1.1rem;
+}
+
+.lh14 {
+    line-height: 1.4;
+}
+
+/* Colores y sombras */
+
+.coTexto {
+    color: #353535;
+}
+
+.bgBlanco {
+    background-color: #fff;
+}
+
+.bxsh-alert {
+    box-shadow: 0 0.5em 1.5em 0 #0004;
+}
+
+/* Botones de Alert.confirm */
+
+.alerta__btn {
+    padding: 8px 16px;
+    border: 2px solid #1f4587;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 700;
+    color: #fff;
+    background-color: #1f4587;
+    cursor: pointer;
+}
+
+.alerta__btn--sec {
+    color: #1f4587;
+    background-color: #fff;
+}
+
+/* Alerta: solo lo que no se puede resolver con utilidades */
+
+.alerta::backdrop {
+    background-color: #0f172a8c;
+}
+
+/***RESPONSIVE***/
+
+@media screen and (max-width: 420px) {
+    .alerta__acciones {
+        flex-direction: column-reverse;
+    }
+
+    .alerta__acciones > button {
+        width: 100%;
+    }
+}

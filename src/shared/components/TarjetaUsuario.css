@@ -1,0 +1,132 @@
+@charset "UTF-8";
+
+/* Layout */
+
+.dpF {
+    display: flex;
+}
+
+.fdC {
+    flex-direction: column;
+}
+
+.aiC {
+    align-items: center;
+}
+
+.jcC {
+    justify-content: center;
+}
+
+.g1 {
+    gap: 1px;
+}
+
+.g10 {
+    gap: 10px;
+}
+
+.flx0 {
+    flex: 0 0 auto;
+}
+
+.flx1 {
+    flex: 1 1 auto;
+}
+
+.minW0 {
+    min-width: 0;
+}
+
+/* Dimensiones */
+
+.bsBox {
+    box-sizing: border-box;
+}
+
+.wFit {
+    width: fit-content;
+}
+
+.mxW100 {
+    max-width: 100%;
+}
+
+.sqr36 {
+    width: 36px;
+    height: 36px;
+}
+
+.pd8-10 {
+    padding: 8px 10px;
+}
+
+.br10 {
+    border-radius: 10px;
+}
+
+.br50 {
+    border-radius: 50%;
+}
+
+/* Texto */
+
+.fs8 {
+    font-size: 0.8rem;
+}
+
+.lh125 {
+    line-height: 1.25;
+}
+
+.fw7 {
+    font-weight: 700;
+}
+
+.wsN {
+    white-space: normal;
+}
+
+.owAny {
+    overflow-wrap: anywhere;
+}
+
+/* Colores */
+
+.coBlanco {
+    color: #fff;
+}
+
+.coBlanco90 {
+    color: #ffffffe6;
+}
+
+.bgBlanco20 {
+    background-color: #ffffff33;
+}
+
+/* Mismo azul del sidebar (--azul-base), con transparencia */
+.bgAzulTrans {
+    background-color: #1f4587d9;
+    background-color: color-mix(in srgb, var(--azul-base) 84%, transparent);
+}
+
+/* Tarjeta de usuario: solo lo que no se puede resolver con utilidades */
+.tarjeta-usuario > button {
+    flex: 0 0 auto;
+    min-height: 0;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+}
+
+/***RESPONSIVE***/
+@media screen and (max-width: 420px) {
+    .tarjeta-usuario {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .tarjeta-usuario > button {
+        width: 100%;
+    }
+}

@@ -2,6 +2,8 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { NavLink, useLocation } from "react-router";
 import { Boton } from "../components/Boton";
 import "./PanelLayout.css";
+import { TarjetaUsuario } from "../components/TarjetaUsuario";
+import { Alert } from "../components/Alert";
 
 interface EnlacePanel {
   ruta: string;
@@ -108,11 +110,7 @@ function IconoMenu({ nombre }: { nombre: string }) {
   };
 
   return (
-    <svg {...props}>
-      {iconos[nombre] ?? (
-        <circle cx="12" cy="12" r="8" />
-      )}
-    </svg>
+    <svg {...props}>{iconos[nombre] ?? <circle cx="12" cy="12" r="8" />}</svg>
   );
 }
 
@@ -258,7 +256,11 @@ export function PanelLayout({
 
   function cerrarSesion() {
     cerrarMenu();
-    onLogout();
+    Alert.confirm({
+      msg: "¿Seguro que deseas cerrar sesión?",
+      btnTxt: "CERRAR SESIÓN",
+      resolve: onLogout,
+    });
   }
 
   return (
@@ -306,7 +308,7 @@ export function PanelLayout({
           aria-label={`Navegación: ${nombreRol}`}
         >
           <NavLink to={rutaInicio} end onClick={cerrarMenu}>
-            <IconoMenu nombre="Inicio"/>
+            <IconoMenu nombre="Inicio" />
             Inicio
           </NavLink>
 
@@ -359,7 +361,7 @@ export function PanelLayout({
                     {grupo.enlaces.map((enlace) => (
                       <li key={enlace.ruta}>
                         <NavLink to={enlace.ruta} end onClick={cerrarMenu}>
-                          <IconoMenu nombre={enlace.texto}/>
+                          <IconoMenu nombre={enlace.texto} />
                           {enlace.texto}
                         </NavLink>
                       </li>
@@ -398,10 +400,11 @@ export function PanelLayout({
             </div>
           </div>
 
-          <div className="panel-layout__desktop-account">
-            <span>{nombreRol}</span>
-            <Boton onClick={cerrarSesion}>Cerrar sesión</Boton>
-          </div>
+          <TarjetaUsuario
+            nombreRol={nombreRol}
+            correo="administrador@colegio.com"
+            onLogout={cerrarSesion}
+          />
         </header>
 
         <main id={contenidoId} className="panel-layout__content" tabIndex={-1}>

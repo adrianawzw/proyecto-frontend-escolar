@@ -290,7 +290,12 @@ export function PanelLayout({
         aria-label={`Menú: ${nombreRol}`}
       >
         <div className="panel-layout__sidebar-top">
-          <strong className="panel-layout__brand">Liceo Santo Toribio</strong>
+          <div className="panel-layout__marca">
+            <span className="panel-layout__logo" aria-hidden="true">
+              LS
+            </span>
+            <strong className="panel-layout__brand">Liceo Santo Toribio</strong>
+          </div>
 
           <button
             ref={cerrarRef}
@@ -401,6 +406,7 @@ export function PanelLayout({
           </div>
 
           <TarjetaUsuario
+            className="panel-layout__usuario"
             nombreRol={nombreRol}
             correo="administrador@colegio.com"
             onLogout={cerrarSesion}

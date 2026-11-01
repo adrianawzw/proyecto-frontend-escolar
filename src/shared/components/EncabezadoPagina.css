@@ -1,0 +1,38 @@
+.encabezado-pagina {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--espacio-4);
+}
+
+.encabezado-pagina__texto {
+  min-width: 0;
+}
+
+.encabezado-pagina h1 {
+  margin: 0;
+  font-size: var(--texto-titulo);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+.encabezado-pagina p {
+  max-width: 60ch;
+  margin: var(--espacio-1) 0 0;
+  color: var(--color-texto-secundario);
+}
+
+.encabezado-pagina__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-3);
+}
+
+@media (max-width: 600px) {
+  .encabezado-pagina__acciones,
+  .encabezado-pagina__acciones > .boton {
+    width: 100%;
+  }
+}

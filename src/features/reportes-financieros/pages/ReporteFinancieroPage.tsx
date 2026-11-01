@@ -205,16 +205,19 @@ export function ReporteFinancieroPage({ token }: ReporteFinancieroPageProps) {
           <div className="reporte-financiero__resumen">
             <TarjetaResumen
               titulo="Total de ingresos"
+              tono="exito"
               valor={moneda.format(reporte.totalIngresos)}
             />
 
             <TarjetaResumen
               titulo="Total de egresos"
+              tono="alerta"
               valor={moneda.format(reporte.totalEgresos)}
             />
 
             <TarjetaResumen
               titulo="Balance del periodo"
+              tono={reporte.balance < 0 ? "error" : "exito"}
               valor={moneda.format(reporte.balance)}
             />
           </div>

@@ -27,7 +27,11 @@ export function Paginacion({
       </p>
 
       <div className="paginacion__controles">
-        <Boton disabled={pagina <= 1} onClick={() => onCambiar(pagina - 1)}>
+        <Boton
+          className="boton--compacto"
+          disabled={pagina <= 1}
+          onClick={() => onCambiar(pagina - 1)}
+        >
           Anterior
         </Boton>
 
@@ -36,6 +40,7 @@ export function Paginacion({
         </span>
 
         <Boton
+          className="boton--compacto"
           disabled={pagina >= paginas}
           onClick={() => onCambiar(pagina + 1)}
         >

@@ -1,13 +1,18 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { obtenerPagosDocentes, pagarDocente } from "../pagos-docentes.service";
 import type { PagoDocente } from "../pagos-docentes.types";
 import { Boton } from "../../../shared/components/Boton";
 import { CampoEntrada } from "../../../shared/components/CampoEntrada";
 import { BadgeEstado } from "../../../shared/components/BadgeEstado";
 import { Paginacion } from "../../../shared/components/Paginacion";
+import { EncabezadoPagina } from "../../../shared/components/EncabezadoPagina";
+import { PanelFiltros } from "../../../shared/components/PanelFiltros";
+import { Aviso } from "../../../shared/components/Aviso";
+import { TarjetaResumen } from "../../../shared/components/TarjetaResumen";
+import { ModalConfirmacion } from "../../../shared/components/ModalConfirmacion";
 import { GenerarPagosDocentes } from "../components/GenerarPagosDocentes";
+import "../../../styles/paginas.css";
 import "../../../styles/listados.css";
-import "./PagosDocentesPage.css";
 
 interface PagosDocentesPageProps {
   token: string;
@@ -180,40 +185,49 @@ export function PagosDocentesPage({ token }: PagosDocentesPageProps) {
     }
   }
 
+  const sumar = (lista: PagoDocente[]) =>
+    lista.reduce((total, pago) => total + pago.monto, 0);
+
+  const pagados = filtrados.filter((pago) => pago.estado === "PAGADO");
+  const programados = filtrados.filter((pago) => pago.estado === "PROGRAMADO");
+  const retrasados = filtrados.filter((pago) => pago.estado === "RETRASO");
+
+  const cantidad = (lista: PagoDocente[]) =>
+    `${lista.length} ${lista.length === 1 ? "pago" : "pagos"}`;
+
+  const periodo = mes ? `${meses[Number(mes) - 1]} de ${anio}` : `el año ${anio}`;
+
   return (
-    <section className="pagos-docentes">
-      <header className="pagos-docentes__encabezado">
-        <h1>Pagos a docentes</h1>
-        <p>
-          Consulta los pagos programados y registra los importes entregados.
-        </p>
-      </header>
+    <section className="pagina">
+      <EncabezadoPagina
+        titulo="Pagos a docentes"
+        descripcion="Consulta los pagos programados y registra los importes entregados."
+        acciones={
+          <GenerarPagosDocentes
+            token={token}
+            disabled={cargando || pagando}
+            onGenerados={(anioGenerado) => {
+              setAnio(anioGenerado);
+              setMes("");
+              setEstado("");
+              setBusqueda("");
+              setPagina(1);
 
-      <div className="pagos-docentes__herramientas">
-        <GenerarPagosDocentes
-          token={token}
-          disabled={cargando || pagando}
-          onGenerados={(anioGenerado) => {
-            setAnio(anioGenerado);
-            setMes("");
-            setEstado("");
-            setBusqueda("");
-            setPagina(1);
+              setError("");
+              setErrorPago("");
+              setCargando(true);
 
-            setError("");
-            setErrorPago("");
-            setCargando(true);
+              setMensajePago(
+                `Generación de pagos de ${anioGenerado} completada. Los pagos existentes se conservaron.`,
+              );
 
-            setMensajePago(
-              `Generación de pagos de ${anioGenerado} completada. Los pagos existentes se conservaron.`,
-            );
+              setIntento((actual) => actual + 1);
+            }}
+          />
+        }
+      />
 
-            setIntento((actual) => actual + 1);
-          }}
-        />
-      </div>
-
-      <div className="pagos-docentes__filtros">
+      <PanelFiltros>
         <div className="campo">
           <label className="campo__etiqueta" htmlFor="pagos-docentes-anio">
             Año
@@ -259,18 +273,20 @@ export function PagosDocentesPage({ token }: PagosDocentesPageProps) {
           </select>
         </div>
 
-        <CampoEntrada
-          id="pagos-docentes-busqueda"
-          etiqueta="Buscar docente"
-          type="search"
-          value={busqueda}
-          onChange={(evento) => {
-            setBusqueda(evento.target.value);
-            setPagina(1);
-          }}
-          placeholder="Nombres o apellidos"
-          disabled={cargando}
-        />
+        <div className="panel-filtros__ancho">
+          <CampoEntrada
+            id="pagos-docentes-busqueda"
+            etiqueta="Buscar docente"
+            type="search"
+            value={busqueda}
+            onChange={(evento) => {
+              setBusqueda(evento.target.value);
+              setPagina(1);
+            }}
+            placeholder="Nombres o apellidos"
+            disabled={cargando}
+          />
+        </div>
 
         <div className="campo">
           <label className="campo__etiqueta" htmlFor="pagos-docentes-estado">
@@ -294,12 +310,12 @@ export function PagosDocentesPage({ token }: PagosDocentesPageProps) {
             ))}
           </select>
         </div>
-      </div>
+      </PanelFiltros>
 
       {mensajePago && (
-        <p className="pagos-docentes__exito" role="status">
+        <Aviso tipo="exito" onCerrar={() => setMensajePago("")}>
           {mensajePago}
-        </p>
+        </Aviso>
       )}
 
       {cargando && (
@@ -345,6 +361,35 @@ export function PagosDocentesPage({ token }: PagosDocentesPageProps) {
       {!cargando && !error && filtrados.length > 0 && (
         <>
           <div
+            className="grilla-resumen"
+            role="region"
+            aria-label={`Resumen de pagos de ${periodo}`}
+          >
+            <TarjetaResumen
+              titulo="Total programado"
+              valor={moneda.format(sumar(filtrados))}
+              detalle={`${cantidad(filtrados)} en ${periodo}`}
+            />
+            <TarjetaResumen
+              titulo="Pagado"
+              tono="exito"
+              valor={moneda.format(sumar(pagados))}
+              detalle={cantidad(pagados)}
+            />
+            <TarjetaResumen
+              titulo="Por pagar"
+              valor={moneda.format(sumar(programados))}
+              detalle={cantidad(programados)}
+            />
+            <TarjetaResumen
+              titulo="En retraso"
+              tono={retrasados.length > 0 ? "error" : undefined}
+              valor={moneda.format(sumar(retrasados))}
+              detalle={cantidad(retrasados)}
+            />
+          </div>
+
+          <div
             className="tabla-listado"
             role="region"
             aria-label="Listado de pagos a docentes"
@@ -358,26 +403,36 @@ export function PagosDocentesPage({ token }: PagosDocentesPageProps) {
                 <tr>
                   <th scope="col">Docente</th>
                   <th scope="col">Mes</th>
-                  <th scope="col">Monto</th>
+                  <th scope="col" className="celda-numerica">
+                    Monto
+                  </th>
                   <th scope="col">Fecha programada</th>
                   <th scope="col">Fecha de pago</th>
                   <th scope="col">Estado</th>
-                  <th scope="col">Acciones</th>
+                  <th scope="col" className="celda-acciones">
+                    Acciones
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {visibles.map((pago) => (
                   <tr key={pago.id}>
-                    <td data-label="Docente">{pago.nombresDocente}</td>
+                    <td data-label="Docente" className="celda-principal">
+                      {pago.nombresDocente}
+                    </td>
                     <td data-label="Mes">{meses[pago.mes - 1]}</td>
-                    <td data-label="Monto">{moneda.format(pago.monto)}</td>
+                    <td data-label="Monto" className="celda-numerica">
+                      {moneda.format(pago.monto)}
+                    </td>
                     <td data-label="Fecha programada">
                       {pago.fechaProgramada.split("-").reverse().join("/")}
                     </td>
                     <td data-label="Fecha de pago">
-                      {pago.fechaPago
-                        ? fechaPago.format(new Date(pago.fechaPago))
-                        : "Sin pago"}
+                      {pago.fechaPago ? (
+                        fechaPago.format(new Date(pago.fechaPago))
+                      ) : (
+                        <span className="texto-suave">Sin pago</span>
+                      )}
                     </td>
                     <td data-label="Estado">
                       <BadgeEstado
@@ -392,11 +447,12 @@ export function PagosDocentesPage({ token }: PagosDocentesPageProps) {
                         {estados[pago.estado]}
                       </BadgeEstado>
                     </td>
-                    <td data-label="Acciones">
+                    <td data-label="Acciones" className="celda-acciones">
                       {pago.estado === "PAGADO" ? (
-                        <span>Pago registrado</span>
+                        <span className="texto-suave">Pago registrado</span>
                       ) : (
                         <Boton
+                          className="boton--compacto"
                           onClick={() => {
                             setMensajePago("");
                             setErrorPago("");
@@ -426,110 +482,30 @@ export function PagosDocentesPage({ token }: PagosDocentesPageProps) {
       )}
 
       {pagoSeleccionado && (
-        <ConfirmarPagoDocenteModal
-          pago={pagoSeleccionado}
-          pagando={pagando}
+        <ModalConfirmacion
+          titulo="Confirmar pago a docente"
+          descripcion="Confirma únicamente cuando el colegio haya entregado el importe."
+          detalle={[
+            { etiqueta: "Docente", valor: pagoSeleccionado.nombresDocente },
+            {
+              etiqueta: "Periodo",
+              valor: `${meses[pagoSeleccionado.mes - 1]} de ${pagoSeleccionado.anio}`,
+            },
+            {
+              etiqueta: "Monto pagado",
+              valor: moneda.format(pagoSeleccionado.monto),
+            },
+          ]}
           error={errorPago}
+          cargando={pagando}
+          textoConfirmar="Confirmar pago"
+          textoReintentar="Reintentar pago"
+          textoCargando="Registrando..."
+          idFocoAlternativo="pagos-docentes-busqueda"
           onCancelar={cerrarPago}
           onConfirmar={() => void registrarPago()}
         />
       )}
     </section>
-  );
-}
-
-interface ConfirmarPagoDocenteModalProps {
-  pago: PagoDocente;
-  pagando: boolean;
-  error: string;
-  onCancelar: () => void;
-  onConfirmar: () => void;
-}
-
-function ConfirmarPagoDocenteModal({
-  pago,
-  pagando,
-  error,
-  onCancelar,
-  onConfirmar,
-}: ConfirmarPagoDocenteModalProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const tituloId = useId();
-  const descripcionId = useId();
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    const elementoAnterior = document.activeElement;
-
-    if (dialog && !dialog.open) dialog.showModal();
-
-    return () => {
-      dialog?.close();
-
-      if (
-        elementoAnterior instanceof HTMLElement &&
-        elementoAnterior.isConnected
-      ) {
-        elementoAnterior.focus();
-      } else {
-        document.getElementById("pagos-docentes-busqueda")?.focus();
-      }
-    };
-  }, []);
-
-  return (
-    <dialog
-      ref={dialogRef}
-      className="pagos-docentes__modal"
-      aria-labelledby={tituloId}
-      aria-describedby={descripcionId}
-      aria-busy={pagando}
-      onCancel={(evento) => {
-        evento.preventDefault();
-        onCancelar();
-      }}
-    >
-      <h2 id={tituloId}>Confirmar pago a docente</h2>
-      <p id={descripcionId}>
-        Confirma únicamente cuando el colegio haya entregado el importe.
-      </p>
-
-      <dl className="pagos-docentes__modal-detalle">
-        <div>
-          <dt>Docente</dt>
-          <dd>{pago.nombresDocente}</dd>
-        </div>
-        <div>
-          <dt>Periodo</dt>
-          <dd>
-            {meses[pago.mes - 1]} de {pago.anio}
-          </dd>
-        </div>
-        <div>
-          <dt>Monto pagado</dt>
-          <dd>{moneda.format(pago.monto)}</dd>
-        </div>
-      </dl>
-
-      {error && (
-        <p className="pagos-docentes__error" role="alert">
-          {error}
-        </p>
-      )}
-
-      <div className="pagos-docentes__acciones">
-        <Boton onClick={onCancelar} disabled={pagando} autoFocus>
-          Cancelar
-        </Boton>
-        <Boton
-          variante="principal"
-          onClick={onConfirmar}
-          cargando={pagando}
-          textoCargando="Registrando..."
-        >
-          {error ? "Reintentar pago" : "Confirmar pago"}
-        </Boton>
-      </div>
-    </dialog>
   );
 }

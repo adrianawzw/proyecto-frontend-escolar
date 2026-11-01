@@ -44,3 +44,12 @@
   color: var(--color-deshabilitado-texto);
   cursor: not-allowed;
 }
+
+
+/* Acciones repetidas en cada fila de una tabla */
+.boton--compacto {
+  min-height: 2.25rem;
+  padding: var(--espacio-1) var(--espacio-3);
+  font-size: var(--texto-pequeno);
+  white-space: nowrap;
+}

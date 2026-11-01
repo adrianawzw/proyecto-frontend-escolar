@@ -1,5 +1,7 @@
 import { useId, useRef, useState } from "react";
 import { Boton } from "../../../shared/components/Boton";
+import { Aviso } from "../../../shared/components/Aviso";
+import "../../../shared/components/ModalConfirmacion.css";
 import { generarPagosAnuales } from "../pagos-docentes.service";
 
 interface GenerarPagosDocentesProps {
@@ -77,7 +79,7 @@ export function GenerarPagosDocentes({
 
       <dialog
         ref={dialogRef}
-        className="pagos-docentes__modal"
+        className="modal-confirmacion"
         aria-labelledby={tituloId}
         aria-describedby={descripcionId}
         aria-busy={guardando}
@@ -97,13 +99,9 @@ export function GenerarPagosDocentes({
 
         <p>Esta acción no registra la entrega de dinero.</p>
 
-        {error && (
-          <p className="generar-pagos__error" role="alert">
-            {error}
-          </p>
-        )}
+        {error && <Aviso tipo="error">{error}</Aviso>}
 
-        <div className="pagos-docentes__acciones">
+        <div className="modal-confirmacion__acciones">
           <Boton onClick={cerrar} disabled={guardando} autoFocus>
             Cancelar
           </Boton>

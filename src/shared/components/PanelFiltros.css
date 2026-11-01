@@ -1,0 +1,28 @@
+.panel-filtros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  align-items: start;
+  gap: var(--espacio-4);
+  padding: var(--espacio-4);
+  border: 1px solid var(--color-borde-suave);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-superficie);
+  box-shadow: var(--sombra-tarjeta);
+}
+
+/* Etiquetas de filtro más discretas que las de un formulario */
+.panel-filtros .campo__etiqueta {
+  color: var(--color-texto-secundario);
+  font-size: var(--texto-pequeno);
+  font-weight: 600;
+}
+
+@media (min-width: 900px) {
+  .panel-filtros {
+    padding: var(--espacio-4) var(--espacio-6);
+  }
+
+  .panel-filtros__ancho {
+    grid-column: span 2;
+  }
+}

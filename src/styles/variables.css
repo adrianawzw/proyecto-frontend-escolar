@@ -55,4 +55,26 @@
   --radio-tarjeta: 0.75rem;
   --altura-control: 3rem;
   --ancho-contenido: 80rem;
+
+  /* ── Añadidos para el rediseño (los tokens anteriores no cambian) ── */
+
+  /* Superficies suaves: bordes de tarjetas y cabeceras de tabla */
+  --color-borde-suave: #e2e8f0;
+  --color-superficie-alt: #f1f5f9;
+
+  /* Texto sobre azul de marca (menú lateral) */
+  --sidebar-ancho: 18rem;
+  --sidebar-texto: rgb(255 255 255 / 92%);
+  --sidebar-texto-suave: rgb(255 255 255 / 72%); /* 5.6:1 sobre --azul-base */
+  --sidebar-hover: rgb(255 255 255 / 9%);
+  --sidebar-linea: rgb(255 255 255 / 14%);
+
+  /* Elevación: tres niveles, de menor a mayor */
+  --sombra-tarjeta: 0 1px 2px rgb(15 23 42 / 6%), 0 1px 1px rgb(15 23 42 / 4%);
+  --sombra-activo: 0 2px 8px rgb(8 20 48 / 28%);
+  --sombra-modal: 0 24px 64px rgb(15 23 42 / 22%);
+
+  /* Forma y tipografía adicionales */
+  --radio-menu: 0.625rem;
+  --texto-chico: 0.8125rem;
 }

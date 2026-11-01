@@ -1,11 +1,13 @@
+/* ── Estados del listado: cargando, error y vacío ── */
 .estado-listado {
   display: grid;
-  justify-items: start;
-  gap: var(--espacio-4);
-  padding: var(--espacio-6);
-  border: 1px solid var(--color-borde);
+  justify-items: center;
+  gap: var(--espacio-3);
+  padding: var(--espacio-8) var(--espacio-6);
+  border: 1px dashed var(--color-borde);
   border-radius: var(--radio-tarjeta);
   background: var(--color-superficie);
+  text-align: center;
 }
 
 .estado-listado h2 {
@@ -14,7 +16,9 @@
 }
 
 .estado-listado p {
+  max-width: 48ch;
   margin: 0;
+  color: var(--color-texto-secundario);
 }
 
 .estado-listado__error {
@@ -25,6 +29,31 @@
   text-decoration: none;
 }
 
+/* Mientras carga: <p className="estado-listado" role="status"> */
+p.estado-listado[role="status"] {
+  grid-auto-flow: column;
+  justify-content: center;
+  border-style: solid;
+  border-color: var(--color-borde-suave);
+}
+
+p.estado-listado[role="status"]::before {
+  content: "";
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 2px solid var(--color-borde);
+  border-top-color: var(--azul-base);
+  border-radius: 50%;
+  animation: listado-giro 0.8s linear infinite;
+}
+
+@keyframes listado-giro {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Tabla: en móvil cada fila es una tarjeta ── */
 .tabla-listado {
   min-width: 0;
 }
@@ -51,9 +80,10 @@
 .tabla-listado tbody tr {
   display: block;
   padding: var(--espacio-2) var(--espacio-4);
-  border: 1px solid var(--color-borde);
+  border: 1px solid var(--color-borde-suave);
   border-radius: var(--radio-tarjeta);
   background: var(--color-superficie);
+  box-shadow: var(--sombra-tarjeta);
 }
 
 .tabla-listado td {
@@ -62,7 +92,7 @@
   align-items: start;
   gap: var(--espacio-3);
   padding-block: var(--espacio-3);
-  border-bottom: 1px solid var(--color-borde);
+  border-bottom: 1px solid var(--color-borde-suave);
   overflow-wrap: anywhere;
 }
 
@@ -80,6 +110,17 @@
   min-width: 0;
 }
 
+/* Primera columna: identifica la fila */
+.tabla-listado td.celda-principal {
+  color: var(--color-texto);
+  font-weight: 600;
+}
+
+.texto-suave {
+  color: var(--color-texto-secundario);
+}
+
+/* ── Paginación ── */
 .paginacion,
 .paginacion__controles {
   display: flex;
@@ -95,24 +136,35 @@
 .paginacion p {
   margin: 0;
   color: var(--color-texto-secundario);
+  font-size: var(--texto-pequeno);
 }
 
+.paginacion__controles span {
+  color: var(--color-texto-secundario);
+  font-size: var(--texto-pequeno);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Escritorio: tabla clásica ── */
 @media (min-width: 640px) {
   .tabla-listado {
     overflow-x: auto;
-    border: 1px solid var(--color-borde);
+    border: 1px solid var(--color-borde-suave);
     border-radius: var(--radio-tarjeta);
     background: var(--color-superficie);
+    box-shadow: var(--sombra-tarjeta);
   }
 
+  /* Cabecera clara: deja protagonismo a los datos, no a la tabla */
   .tabla-listado thead {
     position: static;
     width: auto;
     height: auto;
     overflow: visible;
     clip-path: none;
-    background: var(--azul-base);
-    color: var(--color-superficie);
+    border-bottom: 1px solid var(--color-borde);
+    background: var(--color-superficie-alt);
+    color: var(--color-texto-secundario);
   }
 
   .tabla-listado tbody {
@@ -121,21 +173,28 @@
 
   .tabla-listado tbody tr {
     display: table-row;
+    padding: 0;
     border: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .tabla-listado th,
   .tabla-listado td {
-    padding: var(--espacio-4);
+    padding: var(--espacio-3) var(--espacio-4);
   }
 
   .tabla-listado th {
+    font-size: var(--texto-chico);
     font-weight: 600;
+    vertical-align: bottom;
   }
 
   .tabla-listado td {
     display: table-cell;
     vertical-align: middle;
+    /* "anywhere" parte "Noviembre" en dos líneas; aquí solo se parte si no cabe */
+    overflow-wrap: break-word;
   }
 
   .tabla-listado td::before {
@@ -143,7 +202,7 @@
   }
 
   .tabla-listado tbody tr:not(:last-child) td {
-    border-bottom: 1px solid var(--color-borde);
+    border-bottom: 1px solid var(--color-borde-suave);
   }
 
   .tabla-listado tbody tr:last-child td {
@@ -153,5 +212,21 @@
   .tabla-listado tbody tr:hover,
   .tabla-listado tbody tr:focus-within {
     background: var(--azul-claro);
+  }
+
+  .tabla-listado td.celda-principal {
+    min-width: 11rem;
+  }
+
+  /* Importes: alineados a la derecha para comparar cifras de un vistazo */
+  .tabla-listado .celda-numerica {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .tabla-listado .celda-acciones {
+    text-align: right;
+    white-space: nowrap;
   }
 }

@@ -1,0 +1,13 @@
+/* Contenedor base de cualquier página del panel */
+.pagina {
+  display: grid;
+  gap: var(--espacio-6);
+  min-width: 0;
+}
+
+/* Fila de tarjetas de resumen: se reparten solas según el ancho disponible */
+.grilla-resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--espacio-4);
+}

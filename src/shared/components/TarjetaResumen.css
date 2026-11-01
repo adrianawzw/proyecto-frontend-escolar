@@ -1,32 +1,74 @@
 .tarjeta-resumen {
+  position: relative;
   min-width: 0;
   padding: var(--espacio-6);
   border: 1px solid var(--color-borde);
   border-radius: var(--radio-tarjeta);
   background: var(--color-superficie);
+  
+  /* Toque premium: borde superior azul */
+  border-top: 4px solid var(--azul-base);
+  
+  /* Transición suave para el hover */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Efecto al pasar el mouse (solo en pantallas grandes) */
+@media (min-width: 640px) {
+  .tarjeta-resumen:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+}
+
+/* Si hay un error, el borde superior se pone rojo */
+.tarjeta-resumen--error {
+  border-top-color: var(--rojo-base);
 }
 
 .tarjeta-resumen__titulo {
   margin: 0;
   color: var(--color-texto-secundario);
-  font-size: var(--texto-normal);
+  font-size: var(--texto-pequeno);
   font-weight: 600;
+  text-transform: uppercase; /* Un toque más profesional */
+  letter-spacing: 0.05em;
 }
 
 .tarjeta-resumen__valor {
   margin: var(--espacio-4) 0 0;
   color: var(--color-texto);
   font-size: clamp(1.75rem, 3vw, 2.5rem);
-  font-weight: 700;
-  line-height: 1.2;
+  font-weight: 800; /* Un poco más grueso */
+  line-height: 1.1;
   overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums; /* Para que los números se vean alineados */
 }
 
+/* --- Efecto de carga (Skeleton) --- */
 .tarjeta-resumen__cargando {
-  margin: var(--espacio-4) 0 0;
-  color: var(--color-texto-secundario);
+  margin-top: var(--espacio-4);
+  height: 3rem;
+  display: flex;
+  align-items: center;
 }
 
+.tarjeta-resumen__skeleton {
+  display: block;
+  width: 60%;
+  height: 2rem;
+  border-radius: var(--radio-control);
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: skeleton-carga 1.5s infinite linear;
+}
+
+@keyframes skeleton-carga {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* --- Error --- */
 .tarjeta-resumen__error {
   display: grid;
   justify-items: start;
@@ -37,5 +79,6 @@
 .tarjeta-resumen__error p {
   margin: 0;
   color: var(--rojo-base);
+  font-size: var(--texto-pequeno);
   overflow-wrap: anywhere;
 }

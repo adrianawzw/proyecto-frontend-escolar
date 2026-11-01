@@ -38,6 +38,9 @@
   visibility: hidden;
   transform: translateX(-100%);
   transition: transform 180ms ease, visibility 180ms ease;
+  border-top-right-radius: 24px;
+  border-bottom-right-radius: 24px;
+  overflow-x: hidden;   
 }
 
 .panel-layout__sidebar--open {
@@ -179,10 +182,12 @@
 }
 
 .panel-layout__nav a[aria-current="page"] {
-  border-inline-start-color: var(--azul-base);
+  background: #ffffff;
   color: var(--azul-base);
-  background: var(--color-superficie);
   font-weight: 700;
+  border-radius: 12px; 
+  border-inline-start-color: transparent;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .panel-layout__sidebar :is(a, button):focus-visible {
@@ -195,7 +200,7 @@
   gap: var(--espacio-3);
   margin-top: auto;
   padding-top: var(--espacio-4);
-  border-top: 1px solid var(--color-superficie);
+  border-top: 1px solid rgba(255, 255, 255, 0.2); /* Borde sutil */
 }
 
 .panel-layout__sidebar-account .boton {
@@ -213,13 +218,16 @@
   min-width: 0;
 }
 
+/* =========================================
+   HEADER (BARRA SUPERIOR CORREGIDA)
+   ========================================= */
 .panel-layout__header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; /* Separa el título de la tarjeta */
   gap: var(--espacio-4);
   min-height: 80px;
-  padding: var(--espacio-3) var(--espacio-4);
+  padding: var(--espacio-3) var(--espacio-6);
   border-bottom: 1px solid var(--color-borde);
   background: var(--color-superficie);
 }
@@ -229,17 +237,27 @@
   align-items: center;
   gap: var(--espacio-3);
   min-width: 0;
+  flex-shrink: 1;
 }
 
 .panel-layout__heading>div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   min-width: 0;
-  overflow-wrap: anywhere;
 }
 
 .panel-layout__contexto {
   margin: 0 0 var(--espacio-1);
   color: var(--color-texto-secundario);
   font-size: var(--texto-pequeno);
+  white-space: nowrap;
+}
+
+.panel-layout__heading strong {
+  font-size: 1.1rem;
+  color: var(--color-texto);
+  white-space: nowrap;
 }
 
 .panel-layout__open-button {
@@ -251,8 +269,9 @@
   background: var(--azul-claro);
 }
 
+/* Cuenta de escritorio (Contenedor de la tarjeta) */
 .panel-layout__desktop-account {
-  display: none;
+  display: none; /* Oculto en móvil */
 }
 
 .panel-layout__content {
@@ -321,15 +340,16 @@
     display: none;
   }
 
+  /* Mostrar la tarjeta en escritorio */
   .panel-layout__desktop-account {
     display: flex;
     align-items: center;
     gap: var(--espacio-4);
+    flex-shrink: 0; /* Evita que se aplaste */
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   .panel-layout__sidebar,
   .panel-layout__chevron,
   .panel-layout__grupo-panel {

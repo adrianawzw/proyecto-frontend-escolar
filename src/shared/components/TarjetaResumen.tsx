@@ -17,19 +17,22 @@ export function TarjetaResumen({
   const cargando = valor === null && !error;
 
   return (
-    <article className="tarjeta-resumen" aria-busy={cargando}>
+    <article 
+      className={`tarjeta-resumen ${error ? "tarjeta-resumen--error" : ""}`} 
+      aria-busy={cargando}
+    >
       <h3 className="tarjeta-resumen__titulo">{titulo}</h3>
 
       {error ? (
         <div className="tarjeta-resumen__error">
           <p role="alert">{error}</p>
 
-          {onReintentar && <Boton onClick={onReintentar}>Reintentar</Boton>}
+          {onReintentar && <Boton variante="principal" onClick={onReintentar}>Reintentar</Boton>}
         </div>
       ) : cargando ? (
-        <p className="tarjeta-resumen__cargando" role="status">
-          Cargando...
-        </p>
+        <div className="tarjeta-resumen__cargando" role="status">
+          <span className="tarjeta-resumen__skeleton"></span>
+        </div>
       ) : (
         <p className="tarjeta-resumen__valor">{valor}</p>
       )}

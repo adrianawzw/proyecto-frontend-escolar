@@ -15,15 +15,36 @@
   white-space: normal;
 }
 
+.boton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgb(0 0 0 / 18%);
+}
+
+.boton:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
 .boton--principal {
-  background: var(--naranja-base);
-  border-color: var(--naranja-base);
+  background: var(--naranja-calido);
+  border-color: var(--naranja-calido);
   color: #fff;
 }
 
 .boton--principal:hover:not(:disabled) {
-  background: var(--naranja-oscuro);
-  border-color: var(--color-accion-hover);
+  background: var(--naranja-sombra);
+  border-color: var(--negro);
+  color: var(--color-superficie);
+}
+
+.boton--exito {
+  background: var(--verde-base);
+  color: #fff;
+  transition-duration: 150ms;
+}
+
+.boton--exito:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--verde-oscuro) 69%, var(--negro) 10%);
   color: var(--color-superficie);
 }
 
@@ -36,6 +57,54 @@
 .boton--secundario:hover:not(:disabled) {
   background: var(--azul-claro);
   border-color: var(--azul-base);
+}
+
+.boton--terciario {
+  background: var(--amarillo-base);
+  border-color: var(--color-superficie);
+  color: var(--negro);
+  transition-duration: 150ms;
+}
+
+.boton--terciario:hover:not(:disabled) {
+  background: var(--amarillo-soft-desaturado);
+  border-color: var(--negro);
+  color: var(--azul-oscuro-figma);
+}
+
+.boton--advertencia {
+  background: var(--naranja-claro);
+  border-color: var(--negro);
+  color: var(--naranja-oscuro);
+  transition-duration: 150ms;
+}
+
+.boton--advertencia:hover:not(:disabled) {
+  background: var(--naranja-base);
+  color: var(--color-superficie);
+}
+
+.boton--positivo {
+  background: var(--verde-claro);
+  color: var(--verde-oscuro);
+  transition-duration: 150ms;
+}
+
+.boton--positivo:hover:not(:disabled) {
+  background: var(--verde-base);
+  color: var(--color-superficie);
+}
+
+.boton--calido {
+  background: var(--naranja-calido);
+  border-color: var(--naranja-calido);
+  color: var(--color-superficie);
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.boton--calido:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--naranja-calido), var(--color-superficie) 69%);
+  border-color: var(--negro);
 }
 
 .boton:disabled {

@@ -3,6 +3,7 @@ import { actualizarEstudiante } from "../estudiantes.service";
 import type { Estudiante } from "../estudiantes.types";
 import { CampoEntrada } from "../../../shared/components/CampoEntrada";
 import { Boton } from "../../../shared/components/Boton";
+import { Alert } from "../../../shared/components/Alert";
 import { useValidacion } from "../../../shared/hooks/useValidacion";
 
 interface EditarEstudianteFormProps {
@@ -45,19 +46,8 @@ export function EditarEstudianteForm({
   const guardandoRef = useRef(false);
   const validacion = useValidacion();
 
-  async function guardar(evento: FormEvent<HTMLFormElement>) {
-    evento.preventDefault();
-
-    if (guardandoRef.current) return;
-
-    setError("");
-
-    if (!validacion.validar(evento.currentTarget)) return;
-
-    if (!estudiante.apoderadoId) {
-      setError("El estudiante no tiene un apoderado asignado.");
-      return;
-    }
+  async function guardar() {
+    if (guardandoRef.current || !estudiante.apoderadoId) return;
 
     guardandoRef.current = true;
     setGuardando(true);
@@ -87,9 +77,33 @@ export function EditarEstudianteForm({
     }
   }
 
+  function aceptarEdicion(evento: FormEvent<HTMLFormElement>) {
+    evento.preventDefault();
+
+    if (guardandoRef.current) return;
+
+    setError("");
+
+    if (!validacion.validar(evento.currentTarget)) return;
+
+    if (!estudiante.apoderadoId) {
+      setError("El estudiante no tiene un apoderado asignado.");
+      return;
+    }
+
+    Alert.confirm({
+      msg: "¿Seguro que deseas guardar los cambios del estudiante?",
+      btnTxt: "Confirmar",
+      className: "alerta--confirmacion",
+      resolve: () => {
+        void guardar();
+      },
+    });
+  }
+
   return (
     <form
-      onSubmit={guardar}
+      onSubmit={aceptarEdicion}
       {...validacion.eventos}
       noValidate
       aria-busy={guardando}

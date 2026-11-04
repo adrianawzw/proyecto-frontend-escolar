@@ -86,6 +86,29 @@
     background-color: #fff;
 }
 
+/* Alerta: confirmacion de guardar cambios*/
+.alerta--confirmacion .alerta__btn {
+    border: none;
+    color: var(--color-superficie);
+    background-color: var(--naranja-calido);
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.alerta--confirmacion .alerta__btn:hover {
+    background-color: var(--naranja-sombra);
+    color: var(--negro);
+}
+
+.alerta--confirmacion .alerta__btn--sec {
+    color: var(--color-superficie);
+    background-color: var(--rojo-base);
+}
+
+.alerta--confirmacion .alerta__btn--sec:hover {
+    background-color: color-mix(in srgb, var(--rojo-base), var(--color-superficie) 40%);
+    color: var(--nobel);
+}
+
 /* Alerta: solo lo que no se puede resolver con utilidades */
 
 .alerta::backdrop {
@@ -99,7 +122,7 @@
         flex-direction: column-reverse;
     }
 
-    .alerta__acciones > button {
+    .alerta__acciones>button {
         width: 100%;
     }
 }

@@ -452,6 +452,7 @@ export function PagosDocentesPage({ token }: PagosDocentesPageProps) {
                         <span className="texto-suave">Pago registrado</span>
                       ) : (
                         <Boton
+                          variante="calido"
                           className="boton--compacto"
                           onClick={() => {
                             setMensajePago("");

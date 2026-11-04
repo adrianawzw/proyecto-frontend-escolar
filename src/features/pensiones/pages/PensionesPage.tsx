@@ -415,6 +415,7 @@ export function PensionesPage({ token }: PensionesPageProps) {
                               setErrorPago("");
                               setPensionSeleccionada(pension);
                             }}
+                            variante="calido"
                             aria-label={`Registrar pago de ${
                               meses[pension.mes - 1]
                             } de ${nombre}`}

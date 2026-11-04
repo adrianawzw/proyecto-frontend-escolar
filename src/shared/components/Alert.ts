@@ -5,6 +5,7 @@ interface OpcionesConfirm {
   titulo?: string;
   btnTxt?: string;
   cancelTxt?: string;
+  className?: string;
   resolve?: () => void; // al pulsar el botón principal
   reject?: () => void; // al cancelar, Escape o clic en el fondo
 }
@@ -25,12 +26,13 @@ function confirm({
   titulo = "Confirmar",
   btnTxt = "Aceptar",
   cancelTxt = "Cancelar",
+  className = "",
   resolve,
   reject,
 }: OpcionesConfirm) {
   const dialogo = crear(
     "dialog",
-    "alerta bsBox wAlerta pd20 bdN br14 coTexto bgBlanco bxsh-alert",
+    `alerta bsBox wAlerta pd20 bdN br14 coTexto bgBlanco bxsh-alert ${className}`.trim(),
   );
   dialogo.setAttribute("aria-label", titulo);
 

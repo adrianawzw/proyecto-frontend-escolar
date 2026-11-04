@@ -5,6 +5,7 @@ import { obtenerDocentes } from "../../docentes/docentes.service";
 import type { Curso } from "../cursos.types";
 import type { Docente } from "../../docentes/docentes.types";
 import { Boton } from "../../../shared/components/Boton";
+import { Alert } from "../../../shared/components/Alert";
 import { CampoEntrada } from "../../../shared/components/CampoEntrada";
 import { useValidacion } from "../../../shared/hooks/useValidacion";
 import { GRADOS_POR_NIVEL } from "../../../shared/constants/academico";
@@ -122,7 +123,37 @@ export function CursoModal({
     if (!guardandoRef.current) onCerrar();
   }
 
-  async function guardar(evento: FormEvent<HTMLFormElement>) {
+  async function guardar(anioNumero: number) {
+    if (guardandoRef.current) return;
+
+    guardandoRef.current = true;
+    setGuardando(true);
+
+    try {
+      const datos = {
+        nombre: nombre.trim(),
+        nivel,
+        grado,
+        anioLectivo: anioNumero,
+        docenteId: docenteId || null,
+      };
+
+      const guardado = curso
+        ? await actualizarCurso(token, curso.id, datos)
+        : await crearCurso(token, datos);
+
+      onGuardado(guardado);
+    } catch (fallo: unknown) {
+      setError(
+        fallo instanceof Error ? fallo.message : "No se pudo guardar el curso.",
+      );
+    } finally {
+      guardandoRef.current = false;
+      setGuardando(false);
+    }
+  }
+
+  function confirmacionGuardarFormulario(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
 
     if (guardandoRef.current || cargandoDocentes || errorDocentes !== "") {
@@ -176,31 +207,16 @@ export function CursoModal({
 
     if (!formulario.reportValidity()) return;
 
-    guardandoRef.current = true;
-    setGuardando(true);
-
-    try {
-      const datos = {
-        nombre: nombre.trim(),
-        nivel,
-        grado,
-        anioLectivo: anioNumero,
-        docenteId: docenteId || null,
-      };
-
-      const guardado = curso
-        ? await actualizarCurso(token, curso.id, datos)
-        : await crearCurso(token, datos);
-
-      onGuardado(guardado);
-    } catch (fallo: unknown) {
-      setError(
-        fallo instanceof Error ? fallo.message : "No se pudo guardar el curso.",
-      );
-    } finally {
-      guardandoRef.current = false;
-      setGuardando(false);
-    }
+    Alert.confirm({
+      msg: curso
+        ? "¿Seguro que deseas guardar los cambios del curso?"
+        : "¿Seguro que deseas registrar el curso?",
+      btnTxt: "Confirmar",
+      className: "alerta--confirmacion",
+      resolve: () => {
+        void guardar(anioNumero);
+      },
+    });
   }
 
   return (
@@ -216,7 +232,7 @@ export function CursoModal({
     >
       <form
         className="cursos__formulario"
-        onSubmit={guardar}
+        onSubmit={confirmacionGuardarFormulario}
         onChange={() => setError("")}
         aria-busy={guardando}
         noValidate

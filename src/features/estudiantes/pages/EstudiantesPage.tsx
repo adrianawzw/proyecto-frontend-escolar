@@ -6,6 +6,7 @@ import { EditarEstudianteModal } from "../components/EditarEstudianteModal";
 import { CampoEntrada } from "../../../shared/components/CampoEntrada";
 import { Boton } from "../../../shared/components/Boton";
 import { Paginacion } from "../../../shared/components/Paginacion";
+import { Alert } from "../../../shared/components/Alert";
 import "./EstudiantesPage.css";
 import "../../../styles/listados.css";
 
@@ -95,6 +96,15 @@ export function EstudiantesPage({ token }: EstudiantesPageProps) {
   function editar(estudiante: Estudiante) {
     setMensaje("");
     setEstudianteEnEdicion(estudiante);
+  }
+
+  function editarEstudiante(estudiante: Estudiante) {
+    Alert.confirm({
+      msg: "¿Seguro que deseas editar los datos del estudiante?",
+      btnTxt: "Confirmar",
+      className: "alerta--confirmacion",
+      resolve: () => editar(estudiante),
+    });
   }
 
   function reintentar() {
@@ -208,7 +218,8 @@ export function EstudiantesPage({ token }: EstudiantesPageProps) {
                     </td>
                     <td data-label="Acciones">
                       <Boton
-                        onClick={() => editar(estudiante)}
+                        variante="terciario"
+                        onClick={() => editarEstudiante(estudiante)}
                         aria-label={`Editar datos de ${estudiante.nombres} ${estudiante.apellidos}`}
                       >
                         Editar

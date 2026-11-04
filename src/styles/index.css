@@ -15,9 +15,34 @@
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
   min-width: 320px;
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+p {
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 480px) {
+  :root {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1600px) {
+  :root {
+    font-size: 17px;
+  }
 }
 
 #root {
@@ -64,8 +89,26 @@ a:hover {
 }
 
 img,
-svg {
+svg,
+video,
+canvas {
   max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+
+dialog {
+  max-width: calc(100vw - 1rem);
+}
+
+@media (pointer: coarse) {
+  .boton--compacto {
+    min-height: 2.75rem;
+  }
 }
 
 textarea {
@@ -95,6 +138,7 @@ textarea {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

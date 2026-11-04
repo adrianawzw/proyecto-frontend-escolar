@@ -307,14 +307,18 @@
 
 .panel-layout__contexto {
   margin: 0;
+  overflow: hidden;
   color: var(--color-texto-secundario);
   font-size: var(--texto-chico);
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .panel-layout__heading strong {
+  overflow: hidden;
   color: var(--color-texto);
-  font-size: 1.0625rem;
+  font-size: clamp(0.9375rem, 0.85rem + 0.4vw, 1.0625rem);
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -334,15 +338,45 @@
   }
 }
 
+/* movil */
+@media (max-width: 480px) {
+  .panel-layout__header {
+    gap: var(--espacio-3);
+    min-height: 3.75rem;
+    padding: var(--espacio-2) var(--espacio-4);
+  }
+
+  /* Oculto a la vista */
+  .panel-layout__open-button > span:last-child {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .panel-layout__sidebar {
+    width: min(92vw, var(--sidebar-ancho));
+  }
+}
+
 .panel-layout__content {
   width: min(100%, var(--ancho-contenido));
   margin-inline: auto;
-  padding: var(--espacio-6) var(--espacio-4);
+  padding: var(--espacio-6) clamp(0.75rem, 4vw, 1rem);
 }
 
 @media (min-width: 640px) {
   .panel-layout__content {
     padding: var(--espacio-8) var(--espacio-6);
+  }
+}
+
+/* laptops pequeños*/
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .panel-layout {
+    --sidebar-ancho: 16rem;
   }
 }
 

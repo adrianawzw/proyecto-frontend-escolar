@@ -292,6 +292,7 @@ export function DocentesPage({ token }: DocentesPageProps) {
                     <td data-label="Acciones">
                       <div className="docentes__acciones-fila">
                         <Boton
+                          variante="terciario"
                           onClick={() => abrirFormulario(docente)}
                           aria-label={`Editar a ${docente.nombres} ${docente.apellidos}`}
                         >
@@ -299,6 +300,7 @@ export function DocentesPage({ token }: DocentesPageProps) {
                         </Boton>
 
                         <Boton
+                          variante={docente.activo ? "advertencia" : "positivo"}
                           onClick={() => {
                             setMensaje("");
                             setErrorEstado("");
@@ -451,7 +453,7 @@ function ConfirmarEstadoDocenteModal({
           Cancelar
         </Boton>
         <Boton
-          variante="principal"
+          variante={docente.activo ? "principal" : "exito"}
           onClick={onConfirmar}
           cargando={cambiando}
           textoCargando="Actualizando..."

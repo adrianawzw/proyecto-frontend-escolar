@@ -3,11 +3,20 @@
   --azul-claro: #eff6ff;
   --azul-base: #204589;
   --azul-oscuro: #173565;
+  --azul-oscuro-figma: #0F172A;
+  --amarillo-soft-desaturado: #BBB17E;
 
   /* Acciones principales */
   --naranja-claro: #fff7ed;
   --naranja-base: #c2410c;
   --naranja-oscuro: #9a3412;
+  --naranja-calido: #f97316;
+  --naranja-sombra: #b55d20;
+
+  /* Colores de componentes */
+  --amarillo-base: #fed919;
+  --negro: #000000;
+  --nobel: #9f9f9f;
 
   /* Estados */
   --verde-claro: #f0fdf4;

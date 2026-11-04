@@ -389,6 +389,7 @@ export function InscripcionForm({ token }: InscripcionFormProps) {
               />
 
               <Boton
+                variante="calido"
                 onClick={() => void buscarApoderado()}
                 cargando={buscando}
                 textoCargando="Buscando..."

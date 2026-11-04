@@ -323,6 +323,7 @@ export function CursosPage({ token }: CursosPageProps) {
                     <td data-label="Acciones">
                       <div className="cursos__acciones-fila">
                         <Boton
+                          variante="terciario"
                           onClick={() => abrirCurso(curso)}
                           aria-label={`Editar ${curso.nombre}, ${curso.nivel}, ${curso.grado}`}
                         >
@@ -368,8 +369,8 @@ export function CursosPage({ token }: CursosPageProps) {
             setCursos((actuales) =>
               esEdicion
                 ? actuales.map((item) =>
-                    item.id === guardado.id ? guardado : item,
-                  )
+                  item.id === guardado.id ? guardado : item,
+                )
                 : [...actuales, guardado],
             );
 
@@ -381,8 +382,7 @@ export function CursosPage({ token }: CursosPageProps) {
             setMostrarModal(false);
             setCursoEditando(null);
             setMensaje(
-              `Curso ${guardado.nombre} ${
-                esEdicion ? "actualizado" : "registrado"
+              `Curso ${guardado.nombre} ${esEdicion ? "actualizado" : "registrado"
               } correctamente.`,
             );
           }}

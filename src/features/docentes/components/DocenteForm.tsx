@@ -3,6 +3,7 @@ import { actualizarDocente, crearDocente } from "../docentes.service";
 import type { Docente } from "../docentes.types";
 import { CampoEntrada } from "../../../shared/components/CampoEntrada";
 import { Boton } from "../../../shared/components/Boton";
+import { Alert } from "../../../shared/components/Alert";
 import { useValidacion } from "../../../shared/hooks/useValidacion";
 
 interface DocenteFormProps {
@@ -37,26 +38,8 @@ export function DocenteForm({
   const guardandoRef = useRef(false);
   const validacion = useValidacion();
 
-  async function guardar(evento: FormEvent<HTMLFormElement>) {
-    evento.preventDefault();
-
+  async function guardar(monto: number) {
     if (guardandoRef.current) return;
-
-    setError("");
-
-    if (!validacion.validar(evento.currentTarget)) return;
-
-    if (nombres.trim().length < 3 || apellidos.trim().length < 3) {
-      setError("Los nombres y apellidos deben tener al menos 3 caracteres.");
-      return;
-    }
-
-    const monto = Number(sueldo);
-
-    if (!sueldo.trim() || !Number.isFinite(monto) || monto < 0) {
-      setError("Ingresa un sueldo mensual válido.");
-      return;
-    }
 
     guardandoRef.current = true;
     setGuardando(true);
@@ -92,10 +75,43 @@ export function DocenteForm({
     }
   }
 
+  function aceptarEdicion(evento: FormEvent<HTMLFormElement>) {
+    evento.preventDefault();
+
+    if (guardandoRef.current) return;
+
+    setError("");
+
+    if (!validacion.validar(evento.currentTarget)) return;
+
+    if (nombres.trim().length < 3 || apellidos.trim().length < 3) {
+      setError("Los nombres y apellidos deben tener al menos 3 caracteres.");
+      return;
+    }
+
+    const monto = Number(sueldo);
+
+    if (!sueldo.trim() || !Number.isFinite(monto) || monto < 0) {
+      setError("Ingresa un sueldo mensual válido.");
+      return;
+    }
+
+    Alert.confirm({
+      msg: docente
+        ? "¿Seguro que deseas guardar los cambios del docente?"
+        : "¿Seguro que deseas registrar al docente?",
+      btnTxt: "Confirmar",
+      className: "alerta--confirmacion",
+      resolve: () => {
+        void guardar(monto);
+      },
+    });
+  }
+
   return (
     <form
       className="docentes__formulario"
-      onSubmit={guardar}
+      onSubmit={aceptarEdicion}
       {...validacion.eventos}
       onChange={() => setError("")}
       noValidate

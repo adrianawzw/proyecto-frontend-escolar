@@ -450,6 +450,16 @@
   }
 }
 
+@media (max-width: 375px) {
+  .login-page__presentacion {
+    padding: 1rem 1rem 1.75rem;
+  }
+
+  .login-page__acceso {
+    padding: 1.75rem 1rem 2.5rem;
+  }
+}
+
 @media (min-width: 761px) and (max-width: 1050px) {
   .login-page__presentacion {
     padding: 2.5rem;

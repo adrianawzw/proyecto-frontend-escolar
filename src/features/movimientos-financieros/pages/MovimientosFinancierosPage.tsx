@@ -230,7 +230,7 @@ export function MovimientosFinancierosPage({
           required
         />
 
-        <Boton type="submit" disabled={cargando}>
+        <Boton type="submit" variante="calido" disabled={cargando}>
           {cargando ? "Consultando..." : "Consultar"}
         </Boton>
       </form>

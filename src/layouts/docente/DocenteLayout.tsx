@@ -6,6 +6,7 @@ import {
 
 interface DocenteLayoutProps {
   children: ReactNode;
+  correo: string;
   onLogout: () => void;
 }
 
@@ -21,11 +22,12 @@ const grupos: readonly GrupoNavegacion[] = [
   },
 ];
 
-export function DocenteLayout({ children, onLogout }: DocenteLayoutProps) {
+export function DocenteLayout({ children, onLogout, correo }: DocenteLayoutProps) {
   return (
     <PanelLayout
       nombreRol="Docente"
       tituloPanel="Panel del docente"
+      correo={correo}
       rutaInicio="/docente"
       grupos={grupos}
       onLogout={onLogout}

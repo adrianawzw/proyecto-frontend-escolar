@@ -5,6 +5,7 @@ import "./PanelLayout.css";
 import { TarjetaUsuario } from "../components/TarjetaUsuario";
 import { Alert } from "../components/Alert";
 
+
 interface EnlacePanel {
   ruta: string;
   texto: string;
@@ -117,19 +118,23 @@ function IconoMenu({ nombre }: { nombre: string }) {
 interface PanelLayoutProps {
   children: ReactNode;
   onLogout: () => void;
+  correo: string;
   nombreRol: string;
   tituloPanel: string;
   rutaInicio: string;
   grupos: readonly GrupoNavegacion[];
+  accionesCabecera?: ReactNode;
 }
 
 export function PanelLayout({
   children,
   onLogout,
+  correo,
   nombreRol,
   tituloPanel,
   rutaInicio,
   grupos,
+  accionesCabecera
 }: PanelLayoutProps) {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const { pathname } = useLocation();
@@ -400,17 +405,30 @@ export function PanelLayout({
             </button>
 
             <div>
-              <p className="panel-layout__contexto">{tituloPanel}</p>
+              <p className="panel-layout__contexto">
+                {tituloPanel}
+                {tituloGrupoActivo && (
+                  <><span className="panel-layout__separador" aria-hidden="true">
+                    ›
+                    </span>
+                    {tituloGrupoActivo}
+                    </>
+                  )}
+              </p>
               <strong>{titulo}</strong>
             </div>
           </div>
 
-          <TarjetaUsuario
+          <div className="panel-layout__acciones">
+            {accionesCabecera}
+
+            <TarjetaUsuario
             className="panel-layout__usuario"
             nombreRol={nombreRol}
-            correo="administrador@colegio.com"
+            correo={correo}
             onLogout={cerrarSesion}
           />
+          </div>
         </header>
 
         <main id={contenidoId} className="panel-layout__content" tabIndex={-1}>

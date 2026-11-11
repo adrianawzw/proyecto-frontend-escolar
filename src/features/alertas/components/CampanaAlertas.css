@@ -1,0 +1,171 @@
+.campana-alertas {
+  position: relative;
+}
+
+.campana-alertas__boton {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--altura-control);
+  height: var(--altura-control);
+  padding: 0;
+  border: 1px solid var(--color-borde);
+  border-radius: 50%;
+  color: var(--azul-base);
+  background: var(--color-superficie);
+  transition: background-color 120ms ease;
+}
+
+.campana-alertas__boton:hover,
+.campana-alertas__boton[aria-expanded="true"] {
+  background: var(--azul-claro);
+}
+
+/* La campana se mueve una vez al aparecer el contador, no de forma continua */
+.campana-alertas__boton:has(.campana-alertas__contador) svg {
+  transform-origin: 50% 0;
+  animation: campana-sonido 700ms ease-out 1;
+}
+
+.campana-alertas__contador {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  display: grid;
+  place-items: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.3rem;
+  border: 2px solid var(--color-superficie);
+  border-radius: 999px;
+  color: var(--color-superficie);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
+  background: var(--rojo-base);
+  animation: campana-contador 260ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.campana-alertas__panel {
+  position: absolute;
+  top: calc(100% + var(--espacio-2));
+  right: 0;
+  z-index: 40;
+  width: min(22rem, calc(100vw - 2rem));
+  padding: var(--espacio-4);
+  border: 1px solid var(--color-borde-suave);
+  border-radius: var(--radio-tarjeta);
+  background: var(--color-superficie);
+  box-shadow: var(--sombra-modal);
+  transform-origin: top right;
+  animation: campana-panel 150ms ease-out both;
+}
+
+.campana-alertas__panel h2 {
+  margin: 0 0 var(--espacio-3);
+  font-size: 1rem;
+}
+
+.campana-alertas__panel ul {
+  display: grid;
+  gap: var(--espacio-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.campana-alertas__item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espacio-3);
+  padding: var(--espacio-3);
+  border-radius: var(--radio-control);
+  color: var(--color-texto);
+  text-decoration: none;
+  transition: background-color 120ms ease;
+}
+
+.campana-alertas__item:hover {
+  background: var(--color-superficie-alt);
+}
+
+.campana-alertas__punto {
+  flex-shrink: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-top: 0.45rem;
+  border-radius: 50%;
+}
+
+.campana-alertas__item--error .campana-alertas__punto {
+  background: var(--rojo-base);
+}
+
+.campana-alertas__item--alerta .campana-alertas__punto {
+  background: var(--naranja-base);
+}
+
+.campana-alertas__mensaje,
+.campana-alertas__detalle {
+  display: block;
+}
+
+.campana-alertas__mensaje {
+  font-weight: 600;
+}
+
+.campana-alertas__detalle {
+  color: var(--color-texto-secundario);
+  font-size: var(--texto-pequeno);
+}
+
+.campana-alertas__vacio {
+  display: grid;
+  justify-items: start;
+  gap: var(--espacio-3);
+  margin: 0;
+  color: var(--color-texto-secundario);
+}
+
+@media (max-width: 767px) {
+  /* En móvil el panel ocupa el ancho de la pantalla, bajo la cabecera */
+  .campana-alertas {
+    position: static;
+  }
+
+  .campana-alertas__panel {
+    position: fixed;
+    top: 4.75rem;
+    right: var(--espacio-4);
+    left: var(--espacio-4);
+    width: auto;
+  }
+}
+
+@keyframes campana-panel {
+  from {
+    opacity: 0;
+    transform: translateY(-0.375rem) scale(0.98);
+  }
+}
+
+@keyframes campana-contador {
+  from {
+    transform: scale(0);
+  }
+}
+
+@keyframes campana-sonido {
+  20% {
+    transform: rotate(14deg);
+  }
+  40% {
+    transform: rotate(-12deg);
+  }
+  60% {
+    transform: rotate(8deg);
+  }
+  80% {
+    transform: rotate(-4deg);
+  }
+}

@@ -3,10 +3,12 @@ import {
   PanelLayout,
   type GrupoNavegacion,
 } from "../../shared/layouts/PanelLayout";
+import { CampanaAlertas } from "../../features/alertas/components/CampanaAlertas";
 
 interface AdminLayoutProps {
   children: ReactNode;
   onLogout: () => void;
+  token?: string;
 }
 
 const grupos: readonly GrupoNavegacion[] = [
@@ -43,14 +45,16 @@ const grupos: readonly GrupoNavegacion[] = [
   },
 ];
 
-export function AdminLayout({ children, onLogout }: AdminLayoutProps) {
+export function AdminLayout({ children, onLogout, token }: AdminLayoutProps) {
   return (
     <PanelLayout
       nombreRol="Administrador"
       tituloPanel="Panel del administrador"
       rutaInicio="/admin"
+      correo="ADMIN!"
       grupos={grupos}
       onLogout={onLogout}
+      accionesCabecera={token ? <CampanaAlertas token={token} /> : undefined}
     >
       {children}
     </PanelLayout>

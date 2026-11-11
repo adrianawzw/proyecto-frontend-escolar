@@ -17,6 +17,8 @@ import { DocenteLayout } from "../../layouts/docente/DocenteLayout";
 import { DocenteDashboardPage } from "../../features/dashboard/pages/DocenteDashboardPage";
 import { MisCursosPage } from "../../features/cursos/pages/MisCursosPage";
 import { CursoDocentePage } from "../../features/cursos/pages/CursoDocentePage";
+import { NotFoundPage } from "../../features/errores/pages/NotFoundPage";
+
 
 interface AppRoutesProps {
   sesion: LoginResponse | null;
@@ -67,7 +69,7 @@ export function AppRoutes({ sesion, onLogin, onLogout }: AppRoutesProps) {
         <Route
           path="/admin"
           element={
-            <AdminLayout onLogout={onLogout}>
+            <AdminLayout onLogout={onLogout} token={sesion?.token}>
               <Outlet />
             </AdminLayout>
           }
@@ -131,7 +133,7 @@ export function AppRoutes({ sesion, onLogin, onLogout }: AppRoutesProps) {
             </>
           )}
 
-          <Route path="*" element={<Navigate to="/admin" replace />} />
+          <Route path="*" element={<NotFoundPage rutaInicio="/admin" />} />
         </Route>
       </Route>
 
@@ -139,7 +141,7 @@ export function AppRoutes({ sesion, onLogin, onLogout }: AppRoutesProps) {
         <Route
           path="/docente"
           element={
-            <DocenteLayout onLogout={onLogout}>
+            <DocenteLayout onLogout={onLogout} correo={""}>
               <Outlet />
             </DocenteLayout>
           }
@@ -167,7 +169,7 @@ export function AppRoutes({ sesion, onLogin, onLogout }: AppRoutesProps) {
             }
           />
 
-          <Route path="*" element={<Navigate to="/docente" replace />} />
+          <Route path="*" element={<NotFoundPage rutaInicio="/docente" />} />
         </Route>
       </Route>
 

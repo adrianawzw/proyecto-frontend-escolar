@@ -11,21 +11,6 @@
   box-shadow: var(--sombra-modal);
 }
 
-.modal-confirmacion[open] {
-  animation: modal-entrada 160ms ease-out;
-}
-
-.modal-confirmacion::backdrop {
-  background: rgb(15 23 42 / 55%);
-}
-
-@keyframes modal-entrada {
-  from {
-    opacity: 0;
-    transform: translateY(0.5rem) scale(0.98);
-  }
-}
-
 .modal-confirmacion h2 {
   margin: 0 0 var(--espacio-2);
   font-size: var(--texto-subtitulo);

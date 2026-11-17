@@ -63,9 +63,27 @@ function confirm({
   };
   // se dispara al cerrar por cualquier vía (botón, Escape, fondo)
   dialogo.onclose = () => {
-    dialogo.remove();
     if (confirmado) resolve?.();
     else reject?.();
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (reduceMotion) {
+      dialogo.remove();
+      return;
+    }
+
+    let eliminado = false;
+    const limpiar = () => {
+      if (eliminado) return;
+      eliminado = true;
+      dialogo.remove();
+    };
+
+    dialogo.addEventListener("transitionend", limpiar, { once: true });
+    window.setTimeout(limpiar, 200);
   };
 
   document.body.appendChild(dialogo);

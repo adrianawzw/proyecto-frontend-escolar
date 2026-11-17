@@ -90,13 +90,13 @@
 .alerta--confirmacion .alerta__btn {
     border: none;
     color: var(--color-superficie);
-    background-color: var(--naranja-calido);
-    transition: background-color 150ms ease, color 150ms ease;
+    background-color: var(--naranja-base);
+    transition: background-color 150ms cubic-bezier(0.22, 1, 0.36, 1), color 150ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .alerta--confirmacion .alerta__btn:hover {
-    background-color: var(--naranja-sombra);
-    color: var(--negro);
+    background-color: var(--naranja-oscuro);
+    color: var(--color-superficie);
 }
 
 .alerta--confirmacion .alerta__btn--sec {
@@ -105,14 +105,8 @@
 }
 
 .alerta--confirmacion .alerta__btn--sec:hover {
-    background-color: color-mix(in srgb, var(--rojo-base), var(--color-superficie) 40%);
-    color: var(--nobel);
-}
-
-/* Alerta: solo lo que no se puede resolver con utilidades */
-
-.alerta::backdrop {
-    background-color: #0f172a8c;
+    background-color: var(--rojo-oscuro);
+    color: var(--color-superficie);
 }
 
 /***RESPONSIVE***/

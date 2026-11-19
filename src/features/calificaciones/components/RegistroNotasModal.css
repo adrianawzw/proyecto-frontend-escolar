@@ -20,12 +20,6 @@
   width: min(720px, calc(100% - 32px));
 }
 
-.registro-notas::backdrop,
-.registro-conducta::backdrop,
-.registro-evaluaciones::backdrop {
-  background: rgb(15 23 42 / 55%);
-}
-
 .registro-notas h2,
 .registro-conducta h2,
 .registro-evaluaciones h2 {

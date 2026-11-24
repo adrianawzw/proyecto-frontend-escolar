@@ -9,6 +9,11 @@ import { BadgeEstado } from "../../../shared/components/BadgeEstado";
 import { Paginacion } from "../../../shared/components/Paginacion";
 import "../../../styles/listados.css";
 import "./PensionesPage.css";
+import {
+  crearPdfPensiones,
+  NOMBRE_ARCHIVO_PENSIONES_PDF,
+} from "../pdf/pensiones.pdf";
+import { PdfPreviewModal } from "../../../shared/pdf/PdfPreviewModal";
 
 interface PensionesPageProps {
   token: string;
@@ -68,6 +73,7 @@ export function PensionesPage({ token }: PensionesPageProps) {
   const [pagando, setPagando] = useState(false);
   const [mensajePago, setMensajePago] = useState("");
   const [errorPago, setErrorPago] = useState("");
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
   const pagandoRef = useRef(false);
 
@@ -99,6 +105,12 @@ export function PensionesPage({ token }: PensionesPageProps) {
       activo = false;
     };
   }, [token, intento]);
+
+  useEffect(() => {
+    return () => {
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+    };
+  }, [pdfUrl]);
 
   const matriculasPorId = new Map(
     matriculas.map((matricula) => [matricula.id, matricula]),
@@ -150,6 +162,26 @@ export function PensionesPage({ token }: PensionesPageProps) {
 
     setPensionSeleccionada(null);
     setErrorPago("");
+  }
+
+  function crearPdf() {
+    return crearPdfPensiones({
+      pensiones: filtradas,
+      matriculasPorId,
+      anio,
+      mes: mes === "" ? "Todos los meses" : meses[Number(mes) - 1],
+      estado: estado === "" ? "Todos" : estados[estado as keyof typeof estados],
+      meses,
+      estados,
+    });
+  }
+
+  function abrirVistaPrevia() {
+    setPdfUrl(URL.createObjectURL(crearPdf().obtenerBlob()));
+  }
+
+  function descargarPdf() {
+    crearPdf().descargar(NOMBRE_ARCHIVO_PENSIONES_PDF);
   }
 
   async function registrarPago() {
@@ -287,6 +319,15 @@ export function PensionesPage({ token }: PensionesPageProps) {
             ))}
           </select>
         </div>
+      </div>
+
+      <div className="pensiones__acciones">
+        <Boton
+          onClick={abrirVistaPrevia}
+          disabled={cargando || Boolean(error) || filtradas.length === 0}
+        >
+          Ver PDF
+        </Boton>
       </div>
 
       {mensajePago && (
@@ -451,6 +492,16 @@ export function PensionesPage({ token }: PensionesPageProps) {
           error={errorPago}
           onCancelar={cerrarPago}
           onConfirmar={() => void registrarPago()}
+        />
+      )}
+
+      {pdfUrl && (
+        <PdfPreviewModal
+          url={pdfUrl}
+          titulo="Lista de pensiones"
+          aviso={`Vista previa: ${filtradas.length} pensiones con los filtros actuales. La descarga incluirá todos los resultados.`}
+          onCerrar={() => setPdfUrl(null)}
+          onDescargar={descargarPdf}
         />
       )}
     </section>

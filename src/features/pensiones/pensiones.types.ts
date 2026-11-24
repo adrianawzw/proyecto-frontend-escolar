@@ -11,3 +11,24 @@ export interface Pension {
   fechaPago: string | null;
   estado: EstadoPension;
 }
+
+export const MESES = [
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre",
+];
+
+export const ESTADOS = {
+  PENDIENTE: "Pendiente",
+  PAGADO: "Pagada",
+  EN_MORA: "En mora",
+};

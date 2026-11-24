@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { obtenerEstudiantes } from "../estudiantes.service";
@@ -7,6 +8,11 @@ import { CampoEntrada } from "../../../shared/components/CampoEntrada";
 import { Boton } from "../../../shared/components/Boton";
 import { Paginacion } from "../../../shared/components/Paginacion";
 import { Alert } from "../../../shared/components/Alert";
+import { PdfPreviewModal } from "../../../shared/pdf/PdfPreviewModal";
+import {
+  crearPdfEstudiantes,
+  NOMBRE_ARCHIVO_ESTUDIANTES_PDF,
+} from "../pdf/estudiantesPdf";
 import "./EstudiantesPage.css";
 import "../../../styles/listados.css";
 
@@ -15,6 +21,7 @@ interface EstudiantesPageProps {
 }
 
 const POR_PAGINA = 10;
+const LIMITE_VISTA_PREVIA = 50;
 
 function normalizar(texto: string) {
   return texto
@@ -40,6 +47,9 @@ export function EstudiantesPage({ token }: EstudiantesPageProps) {
   const [mensaje, setMensaje] = useState("");
   const [estudianteEnEdicion, setEstudianteEnEdicion] =
     useState<Estudiante | null>(null);
+
+  const [urlVistaPrevia, setUrlVistaPrevia] = useState<string | null>(null);
+  const [errorPdf, setErrorPdf] = useState("");
 
   useEffect(() => {
     let activo = true;
@@ -68,6 +78,15 @@ export function EstudiantesPage({ token }: EstudiantesPageProps) {
       activo = false;
     };
   }, [token, intento]);
+
+  // Libera la URL temporal cuando se cierra el modal.
+  useEffect(() => {
+    if (!urlVistaPrevia) return;
+
+    return () => {
+      URL.revokeObjectURL(urlVistaPrevia);
+    };
+  }, [urlVistaPrevia]);
 
   const termino = normalizar(busqueda);
 
@@ -113,6 +132,36 @@ export function EstudiantesPage({ token }: EstudiantesPageProps) {
     setIntento((actual) => actual + 1);
   }
 
+  function abrirVistaPrevia() {
+    setErrorPdf("");
+
+    try {
+      // El modal muestra solo una muestra de 50 estudiantes.
+      const pdf = crearPdfEstudiantes(
+        filtrados.slice(0, LIMITE_VISTA_PREVIA),
+      );
+
+      const url = URL.createObjectURL(pdf.obtenerBlob());
+      setUrlVistaPrevia(url);
+    } catch (fallo) {
+      console.error("Error al generar la vista previa:", fallo);
+      setErrorPdf("No se pudo generar la vista previa del PDF.");
+    }
+  }
+
+  function descargarPdf() {
+    setErrorPdf("");
+
+    try {
+      // La descarga incluye todos los estudiantes filtrados.
+      const pdf = crearPdfEstudiantes(filtrados);
+      pdf.descargar(NOMBRE_ARCHIVO_ESTUDIANTES_PDF);
+    } catch (fallo) {
+      console.error("Error al descargar el PDF:", fallo);
+      setErrorPdf("No se pudo descargar el PDF.");
+    }
+  }
+
   return (
     <section className="estudiantes-page">
       <header className="estudiantes-page__encabezado">
@@ -120,21 +169,41 @@ export function EstudiantesPage({ token }: EstudiantesPageProps) {
         <p>Busca estudiantes y actualiza sus datos personales.</p>
       </header>
 
-      <div className="estudiantes-page__busqueda">
-        <CampoEntrada
-          id="buscar-estudiante"
-          etiqueta="Buscar estudiante"
-          type="search"
-          value={busqueda}
-          onChange={(evento) => {
-            setBusqueda(evento.target.value);
-            setPagina(1);
-          }}
-          placeholder="Nombre, apellido o DNI"
-          ayuda="Puedes buscar nombres con o sin tildes."
-          disabled={cargando}
-        />
+      <div className="estudiantes-page__herramientas">
+        <div className="estudiantes-page__busqueda">
+          <CampoEntrada
+            id="buscar-estudiante"
+            etiqueta="Buscar estudiante"
+            type="search"
+            value={busqueda}
+            onChange={(evento) => {
+              setBusqueda(evento.target.value);
+              setPagina(1);
+            }}
+            placeholder="Nombre, apellido o DNI"
+            ayuda="Puedes buscar nombres con o sin tildes."
+            disabled={cargando}
+          />
+        </div>
+
+        {!cargando && !error && filtrados.length > 0 && (
+          <div className="estudiantes-page__acciones-pdf">
+            <Boton onClick={abrirVistaPrevia}>
+              Vista previa
+            </Boton>
+
+            <Boton onClick={descargarPdf}>
+              Descargar PDF
+            </Boton>
+          </div>
+        )}
       </div>
+
+      {errorPdf && (
+        <p className="estado-listado__error" role="alert">
+          {errorPdf}
+        </p>
+      )}
 
       {mensaje && (
         <p className="estudiantes-page__exito" role="status">
@@ -161,7 +230,10 @@ export function EstudiantesPage({ token }: EstudiantesPageProps) {
         <div className="estado-listado">
           <h2>Todavía no hay estudiantes registrados</h2>
           <p>Registra al estudiante desde el proceso de nueva matrícula.</p>
-          <Link to="/admin/matriculas/nueva" className="boton boton--principal">
+          <Link
+            to="/admin/matriculas/nueva"
+            className="boton boton--principal"
+          >
             Nueva matrícula
           </Link>
         </div>
@@ -206,16 +278,22 @@ export function EstudiantesPage({ token }: EstudiantesPageProps) {
               <tbody>
                 {visibles.map((estudiante) => (
                   <tr key={estudiante.id}>
-                    <td data-label="DNI">{estudiante.dni}</td>
+                    <td data-label="DNI">
+                      {estudiante.dni}
+                    </td>
+
                     <td data-label="Estudiante">
                       {estudiante.nombres} {estudiante.apellidos}
                     </td>
+
                     <td data-label="Fecha de nacimiento">
                       {mostrarFecha(estudiante.fechaNacimiento)}
                     </td>
+
                     <td data-label="Apoderado">
                       {estudiante.nombreApoderado ?? "Sin apoderado"}
                     </td>
+
                     <td data-label="Acciones">
                       <Boton
                         variante="terciario"
@@ -249,7 +327,9 @@ export function EstudiantesPage({ token }: EstudiantesPageProps) {
           onActualizado={(actualizado) => {
             setEstudiantes((anteriores) =>
               anteriores.map((estudiante) =>
-                estudiante.id === actualizado.id ? actualizado : estudiante,
+                estudiante.id === actualizado.id
+                  ? actualizado
+                  : estudiante,
               ),
             );
             setEstudianteEnEdicion(null);
@@ -257,6 +337,16 @@ export function EstudiantesPage({ token }: EstudiantesPageProps) {
               "Los datos del estudiante se actualizaron correctamente.",
             );
           }}
+        />
+      )}
+
+      {urlVistaPrevia && (
+        <PdfPreviewModal
+          url={urlVistaPrevia}
+          titulo="Lista de estudiantes"
+          aviso={`Vista previa: ${Math.min(filtrados.length, LIMITE_VISTA_PREVIA)} de ${filtrados.length} estudiantes. La descarga incluirá todos los resultados.`}
+          onCerrar={() => setUrlVistaPrevia(null)}
+          onDescargar={descargarPdf}
         />
       )}
     </section>

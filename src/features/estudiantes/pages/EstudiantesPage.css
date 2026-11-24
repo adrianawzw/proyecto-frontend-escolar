@@ -1,3 +1,4 @@
+
 .estudiantes-page {
   display: grid;
   gap: var(--espacio-6);
@@ -13,8 +14,32 @@
   color: var(--color-texto-secundario);
 }
 
+.estudiantes-page__herramientas {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--espacio-4);
+}
+
 .estudiantes-page__busqueda {
-  width: min(100%, 32rem);
+  flex: 1 1 360px;
+  max-width: 460px;
+  min-width: 0;
+}
+
+.estudiantes-page__acciones-pdf {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+.estudiantes-page__acciones-pdf .boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  min-height: 44px;
+  white-space: nowrap;
 }
 
 .estudiantes-page__exito {
@@ -67,6 +92,22 @@
   border-radius: var(--radio-control);
   color: var(--rojo-base);
   background: var(--rojo-claro);
+}
+
+@media (max-width: 768px) {
+  .estudiantes-page__busqueda {
+    flex-basis: 100%;
+    max-width: none;
+  }
+
+  .estudiantes-page__acciones-pdf {
+    width: 100%;
+  }
+
+  .estudiantes-page__acciones-pdf .boton {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 @media (max-width: 420px) {

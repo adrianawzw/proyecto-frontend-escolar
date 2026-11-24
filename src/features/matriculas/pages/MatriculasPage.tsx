@@ -6,6 +6,11 @@ import { Boton } from "../../../shared/components/Boton";
 import { CampoEntrada } from "../../../shared/components/CampoEntrada";
 import { Paginacion } from "../../../shared/components/Paginacion";
 import { BadgeEstado } from "../../../shared/components/BadgeEstado";
+import { PdfPreviewModal } from "../../../shared/pdf/PdfPreviewModal";
+import {
+  crearPdfMatriculas,
+  NOMBRE_ARCHIVO_MATRICULAS_PDF,
+} from "../pdf/matriculasPdf";
 import "../../../styles/listados.css";
 import "./MatriculasPage.css";
 
@@ -14,6 +19,7 @@ interface MatriculasPageProps {
 }
 
 const POR_PAGINA = 10;
+const LIMITE_VISTA_PREVIA = 50;
 
 const moneda = new Intl.NumberFormat("es-PE", {
   style: "currency",
@@ -44,6 +50,9 @@ export function MatriculasPage({ token }: MatriculasPageProps) {
   const [matriculaPendiente, setMatriculaPendiente] =
     useState<Matricula | null>(null);
 
+  const [urlVistaPrevia, setUrlVistaPrevia] = useState<string | null>(null);
+  const [errorPdf, setErrorPdf] = useState("");
+
   const pagandoRef = useRef(false);
 
   useEffect(() => {
@@ -73,6 +82,15 @@ export function MatriculasPage({ token }: MatriculasPageProps) {
       activo = false;
     };
   }, [token, intento]);
+
+  // Libera la URL temporal cuando se cierra la vista previa.
+  useEffect(() => {
+    if (!urlVistaPrevia) return;
+
+    return () => {
+      URL.revokeObjectURL(urlVistaPrevia);
+    };
+  }, [urlVistaPrevia]);
 
   const anios = Array.from(
     new Set([
@@ -154,6 +172,37 @@ export function MatriculasPage({ token }: MatriculasPageProps) {
     }
   }
 
+  function abrirVistaPrevia() {
+    setErrorPdf("");
+
+    try {
+      // La vista previa muestra como máximo 50 matrículas.
+      const pdf = crearPdfMatriculas(
+        filtradas.slice(0, LIMITE_VISTA_PREVIA),
+        Number(anio),
+      );
+
+      const url = URL.createObjectURL(pdf.obtenerBlob());
+      setUrlVistaPrevia(url);
+    } catch (fallo) {
+      console.error("Error al generar la vista previa:", fallo);
+      setErrorPdf("No se pudo generar la vista previa del PDF.");
+    }
+  }
+
+  function descargarPdf() {
+    setErrorPdf("");
+
+    try {
+      // La descarga incluye todas las matrículas filtradas.
+      const pdf = crearPdfMatriculas(filtradas, Number(anio));
+      pdf.descargar(NOMBRE_ARCHIVO_MATRICULAS_PDF);
+    } catch (fallo) {
+      console.error("Error al descargar el PDF:", fallo);
+      setErrorPdf("No se pudo descargar el PDF.");
+    }
+  }
+
   return (
     <section className="matriculas">
       <header className="matriculas__encabezado">
@@ -218,7 +267,21 @@ export function MatriculasPage({ token }: MatriculasPageProps) {
             <option value="pagada">Pagada</option>
           </select>
         </div>
+
+        {!cargando && !error && filtradas.length > 0 && (
+          <div className="matriculas__acciones-pdf">
+            <Boton onClick={abrirVistaPrevia}>Vista previa</Boton>
+
+            <Boton onClick={descargarPdf}>Descargar PDF</Boton>
+          </div>
+        )}
       </div>
+
+      {errorPdf && (
+        <p className="matriculas__error" role="alert">
+          {errorPdf}
+        </p>
+      )}
 
       {mensajePago && (
         <p className="matriculas__exito" role="status">
@@ -312,6 +375,7 @@ export function MatriculasPage({ token }: MatriculasPageProps) {
                     <td data-label="Estudiante">
                       {matricula.nombreEstudiante}
                     </td>
+
                     <td data-label="Nivel">
                       {matricula.nivel === "INICIAL"
                         ? "Inicial"
@@ -319,13 +383,17 @@ export function MatriculasPage({ token }: MatriculasPageProps) {
                           ? "Primaria"
                           : matricula.nivel}
                     </td>
+
                     <td data-label="Grado">{matricula.grado}</td>
+
                     <td data-label="Matrícula">
                       {moneda.format(matricula.montoMatricula)}
                     </td>
+
                     <td data-label="Pensión mensual">
                       {moneda.format(matricula.montoPensionMensual)}
                     </td>
+
                     <td data-label="Pago de matrícula">
                       <BadgeEstado
                         variante={
@@ -335,6 +403,7 @@ export function MatriculasPage({ token }: MatriculasPageProps) {
                         {matricula.matriculaPagada ? "Pagada" : "Pendiente"}
                       </BadgeEstado>
                     </td>
+
                     <td data-label="Acciones">
                       {matricula.matriculaPagada ? (
                         <span>Pago registrado</span>
@@ -360,6 +429,16 @@ export function MatriculasPage({ token }: MatriculasPageProps) {
             onCambiar={setPagina}
           />
         </>
+      )}
+
+      {urlVistaPrevia && (
+        <PdfPreviewModal
+          url={urlVistaPrevia}
+          titulo="Lista de matrículas"
+          aviso={`Vista previa: ${Math.min(filtradas.length, LIMITE_VISTA_PREVIA)} de ${filtradas.length} matrículas. La descarga incluirá todos los resultados.`}
+          onCerrar={() => setUrlVistaPrevia(null)}
+          onDescargar={descargarPdf}
+        />
       )}
 
       {matriculaPendiente && (
@@ -427,6 +506,7 @@ function ConfirmarPagoModal({
       }}
     >
       <h2 id={tituloId}>Confirmar pago de matrícula</h2>
+
       <p id={descripcionId}>
         Registra este pago únicamente si ya recibiste el importe.
       </p>
@@ -436,10 +516,12 @@ function ConfirmarPagoModal({
           <dt>Estudiante</dt>
           <dd>{matricula.nombreEstudiante}</dd>
         </div>
+
         <div>
           <dt>Año lectivo</dt>
           <dd>{matricula.anioLectivo}</dd>
         </div>
+
         <div>
           <dt>Monto recibido</dt>
           <dd>{moneda.format(matricula.montoMatricula)}</dd>

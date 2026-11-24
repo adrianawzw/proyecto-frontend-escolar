@@ -250,3 +250,41 @@
     flex: 1;
   }
 }
+
+
+/* Acciones para visualizar y descargar el reporte PDF */
+.docentes__acciones-pdf {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--espacio-3);
+}
+
+.docentes__acciones-pdf .boton {
+  min-width: 150px;
+  min-height: 44px;
+}
+
+/* En escritorio los filtros y botones comparten una fila. */
+@media (min-width: 1200px) {
+  .docentes__filtros {
+    grid-template-columns: minmax(0, 2fr) minmax(160px, 1fr) auto;
+    align-items: end;
+  }
+
+  .docentes__acciones-pdf {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .docentes__acciones-pdf {
+    flex-wrap: wrap;
+  }
+
+  .docentes__acciones-pdf .boton {
+    flex: 1;
+    min-width: 0;
+  }
+}

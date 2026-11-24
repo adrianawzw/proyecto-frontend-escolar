@@ -25,6 +25,20 @@
   background: var(--color-superficie);
 }
 
+/* Acciones para generar el reporte de matrículas. */
+.matriculas__acciones-pdf {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--espacio-3);
+}
+
+.matriculas__acciones-pdf .boton {
+  min-width: 150px;
+  min-height: 44px;
+}
+
 .matriculas__exito,
 .matriculas__error {
   margin: 0;
@@ -122,5 +136,13 @@
       minmax(140px, 1fr)
       minmax(0, 2fr)
       minmax(160px, 1fr);
+  }
+}
+
+@media (max-width: 420px) {
+  .matriculas__acciones-pdf .boton,
+  .matriculas__modal-acciones .boton {
+    flex: 1;
+    min-width: 0;
   }
 }

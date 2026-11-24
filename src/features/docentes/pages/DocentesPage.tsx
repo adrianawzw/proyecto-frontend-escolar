@@ -1,3 +1,4 @@
+
 import { useEffect, useId, useRef, useState } from "react";
 import { obtenerDocentes, cambiarEstadoDocente } from "../docentes.service";
 import type { Docente } from "../docentes.types";
@@ -6,6 +7,11 @@ import { Boton } from "../../../shared/components/Boton";
 import { CampoEntrada } from "../../../shared/components/CampoEntrada";
 import { BadgeEstado } from "../../../shared/components/BadgeEstado";
 import { Paginacion } from "../../../shared/components/Paginacion";
+import { PdfPreviewModal } from "../../../shared/pdf/PdfPreviewModal";
+import {
+  crearPdfDocentes,
+  NOMBRE_ARCHIVO_DOCENTES_PDF,
+} from "../pdf/docentesPdf";
 import "../../../styles/listados.css";
 import "./DocentesPage.css";
 
@@ -14,6 +20,7 @@ interface DocentesPageProps {
 }
 
 const POR_PAGINA = 10;
+const LIMITE_VISTA_PREVIA = 50;
 
 const moneda = new Intl.NumberFormat("es-PE", {
   style: "currency",
@@ -44,6 +51,9 @@ export function DocentesPage({ token }: DocentesPageProps) {
   const [cambiando, setCambiando] = useState(false);
   const [errorEstado, setErrorEstado] = useState("");
 
+  const [urlVistaPrevia, setUrlVistaPrevia] = useState<string | null>(null);
+  const [errorPdf, setErrorPdf] = useState("");
+
   const cambiandoRef = useRef(false);
 
   useEffect(() => {
@@ -71,6 +81,15 @@ export function DocentesPage({ token }: DocentesPageProps) {
       activo = false;
     };
   }, [token, intento]);
+
+  // Libera la URL temporal al cerrar la vista previa.
+  useEffect(() => {
+    if (!urlVistaPrevia) return;
+
+    return () => {
+      URL.revokeObjectURL(urlVistaPrevia);
+    };
+  }, [urlVistaPrevia]);
 
   const termino = normalizar(busqueda);
 
@@ -125,7 +144,9 @@ export function DocentesPage({ token }: DocentesPageProps) {
 
       setDocentes((actuales) =>
         actuales.map((item) =>
-          item.id === seleccionado.id ? { ...item, activo: nuevoEstado } : item,
+          item.id === seleccionado.id
+            ? { ...item, activo: nuevoEstado }
+            : item,
         ),
       );
 
@@ -144,6 +165,36 @@ export function DocentesPage({ token }: DocentesPageProps) {
     } finally {
       cambiandoRef.current = false;
       setCambiando(false);
+    }
+  }
+
+  function abrirVistaPrevia() {
+    setErrorPdf("");
+
+    try {
+      // Muestra hasta 50 docentes como ejemplo.
+      const pdf = crearPdfDocentes(
+        filtrados.slice(0, LIMITE_VISTA_PREVIA),
+      );
+
+      const url = URL.createObjectURL(pdf.obtenerBlob());
+      setUrlVistaPrevia(url);
+    } catch (fallo) {
+      console.error("Error al generar vista previa:", fallo);
+      setErrorPdf("No se pudo generar la vista previa del PDF.");
+    }
+  }
+
+  function descargarPdf() {
+    setErrorPdf("");
+
+    try {
+      // Descarga todos los docentes filtrados.
+      const pdf = crearPdfDocentes(filtrados);
+      pdf.descargar(NOMBRE_ARCHIVO_DOCENTES_PDF);
+    } catch (fallo) {
+      console.error("Error al descargar PDF:", fallo);
+      setErrorPdf("No se pudo descargar el PDF.");
     }
   }
 
@@ -182,6 +233,7 @@ export function DocentesPage({ token }: DocentesPageProps) {
           <label className="campo__etiqueta" htmlFor="docentes-estado">
             Estado de la cuenta
           </label>
+
           <select
             id="docentes-estado"
             className="campo__entrada"
@@ -197,7 +249,25 @@ export function DocentesPage({ token }: DocentesPageProps) {
             <option value="inactivo">Inactivos</option>
           </select>
         </div>
+
+        {!cargando && !error && filtrados.length > 0 && (
+          <div className="docentes__acciones-pdf">
+            <Boton onClick={abrirVistaPrevia}>
+              Vista previa
+            </Boton>
+
+            <Boton onClick={descargarPdf}>
+              Descargar PDF
+            </Boton>
+          </div>
+        )}
       </div>
+
+      {errorPdf && (
+        <p className="docentes__error" role="alert">
+          {errorPdf}
+        </p>
+      )}
 
       {mensaje && (
         <p className="docentes__exito" role="status">
@@ -216,6 +286,7 @@ export function DocentesPage({ token }: DocentesPageProps) {
           <p className="estado-listado__error" role="alert">
             {error}
           </p>
+
           <Boton
             onClick={() => {
               setError("");
@@ -235,21 +306,25 @@ export function DocentesPage({ token }: DocentesPageProps) {
         </div>
       )}
 
-      {!cargando && !error && docentes.length > 0 && filtrados.length === 0 && (
-        <div className="estado-listado">
-          <h2>No encontramos docentes</h2>
-          <p>Revisa la búsqueda o cambia el estado seleccionado.</p>
-          <Boton
-            onClick={() => {
-              setBusqueda("");
-              setEstado("");
-              setPagina(1);
-            }}
-          >
-            Limpiar filtros
-          </Boton>
-        </div>
-      )}
+      {!cargando &&
+        !error &&
+        docentes.length > 0 &&
+        filtrados.length === 0 && (
+          <div className="estado-listado">
+            <h2>No encontramos docentes</h2>
+            <p>Revisa la búsqueda o cambia el estado seleccionado.</p>
+
+            <Boton
+              onClick={() => {
+                setBusqueda("");
+                setEstado("");
+                setPagina(1);
+              }}
+            >
+              Limpiar filtros
+            </Boton>
+          </div>
+        )}
 
       {!cargando && !error && filtrados.length > 0 && (
         <>
@@ -263,6 +338,7 @@ export function DocentesPage({ token }: DocentesPageProps) {
               <caption className="solo-lectores">
                 Docentes registrados, ordenados por apellido
               </caption>
+
               <thead>
                 <tr>
                   <th scope="col">DNI</th>
@@ -272,16 +348,20 @@ export function DocentesPage({ token }: DocentesPageProps) {
                   <th scope="col">Acciones</th>
                 </tr>
               </thead>
+
               <tbody>
                 {visibles.map((docente) => (
                   <tr key={docente.id}>
                     <td data-label="DNI">{docente.dni}</td>
+
                     <td data-label="Docente">
                       {docente.nombres} {docente.apellidos}
                     </td>
+
                     <td data-label="Sueldo mensual">
                       {moneda.format(docente.sueldoMensual)}
                     </td>
+
                     <td data-label="Estado">
                       <BadgeEstado
                         variante={docente.activo ? "exito" : "neutro"}
@@ -289,6 +369,7 @@ export function DocentesPage({ token }: DocentesPageProps) {
                         {docente.activo ? "Activo" : "Inactivo"}
                       </BadgeEstado>
                     </td>
+
                     <td data-label="Acciones">
                       <div className="docentes__acciones-fila">
                         <Boton
@@ -300,7 +381,9 @@ export function DocentesPage({ token }: DocentesPageProps) {
                         </Boton>
 
                         <Boton
-                          variante={docente.activo ? "advertencia" : "positivo"}
+                          variante={
+                            docente.activo ? "advertencia" : "positivo"
+                          }
                           onClick={() => {
                             setMensaje("");
                             setErrorEstado("");
@@ -370,6 +453,16 @@ export function DocentesPage({ token }: DocentesPageProps) {
           error={errorEstado}
           onCancelar={cerrarEstado}
           onConfirmar={() => void confirmarCambioEstado()}
+        />
+      )}
+
+      {urlVistaPrevia && (
+        <PdfPreviewModal
+          url={urlVistaPrevia}
+          titulo="Lista de docentes"
+          aviso={`Vista previa: ${Math.min(filtrados.length, LIMITE_VISTA_PREVIA)} de ${filtrados.length} docentes. La descarga incluirá todos los resultados.`}
+          onCerrar={() => setUrlVistaPrevia(null)}
+          onDescargar={descargarPdf}
         />
       )}
     </section>
@@ -452,6 +545,7 @@ function ConfirmarEstadoDocenteModal({
         <Boton onClick={onCancelar} disabled={cambiando} autoFocus>
           Cancelar
         </Boton>
+
         <Boton
           variante={docente.activo ? "principal" : "exito"}
           onClick={onConfirmar}

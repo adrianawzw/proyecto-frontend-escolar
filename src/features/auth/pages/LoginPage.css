@@ -72,6 +72,7 @@
   display: grid;
   flex: 1 1 auto;
   place-items: center;
+  gap: 0.75rem;
   width: min(100%, 36rem);
   min-height: 15rem;
   margin: 0 auto;
@@ -84,6 +85,26 @@
   border-radius: 50%;
   background: rgb(255 255 255 / 7%);
   box-shadow: 0 0 0 2.2rem rgb(255 255 255 / 2.5%);
+  pointer-events: none;
+}
+
+.login-page__slider-ventana {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1.25rem;
+}
+
+.login-page__slider-pista {
+  display: flex;
+  width: 100%;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.login-page__slide {
+  display: grid;
+  flex: 0 0 100%;
+  place-items: center;
 }
 
 .login-page__escuela {
@@ -91,6 +112,44 @@
   width: 100%;
   max-height: 21rem;
   filter: drop-shadow(0 1.2rem 1.5rem rgb(5 16 39 / 18%));
+}
+
+.login-page__slide-imagen {
+  width: auto;
+  max-width: 100%;
+  height: clamp(16rem, 34vh, 22rem);
+  aspect-ratio: 429 / 643;
+  object-fit: cover;
+  border-radius: 214.5px;
+}
+
+.login-page__slider-puntos {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.login-page__slider-punto {
+  width: 0.55rem;
+  height: 0.55rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 35%);
+  cursor: pointer;
+  transition: width 200ms ease, background-color 200ms ease;
+}
+
+.login-page__slider-punto--activo {
+  width: 1.6rem;
+  background: var(--naranja-base);
+}
+
+.login-page__slider-punto:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 .login-page__nota {
@@ -275,7 +334,7 @@
   opacity: 0.8;
 }
 
-.login-page__formulario > .boton {
+.login-page__formulario>.boton {
   width: 100%;
   min-height: 3.25rem;
   margin-top: 0.35rem;
@@ -284,12 +343,12 @@
   transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
 }
 
-.login-page__formulario > .boton:hover:not(:disabled) {
+.login-page__formulario>.boton:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 12px 22px rgb(154 52 18 / 20%);
 }
 
-.login-page__formulario > .boton[aria-busy="true"]::before {
+.login-page__formulario>.boton[aria-busy="true"]::before {
   width: 1rem;
   height: 1rem;
   border: 2px solid currentColor;
@@ -297,6 +356,33 @@
   border-radius: 50%;
   content: "";
   animation: login-girar 700ms linear infinite;
+}
+
+.login-page__recuperacion {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: -1px;
+  text-align: center;
+  margin-top: -1.2rem;
+}
+
+.login-page__recuperacion a {
+  display: inline-block;
+  color: inherit;
+  line-height: 1.1;
+  text-decoration: none;
+  border-bottom: 1.5px solid currentColor;
+}
+
+.login-page__recuperacion a:hover {
+  color: var(--azul-base);
+}
+
+.login-page__recuperacion a:focus-visible {
+  outline: 2px solid var(--color-foco);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 .login-page__error {
@@ -317,11 +403,11 @@
   min-width: 0;
 }
 
-.login-page__contrasena > .campo {
+.login-page__contrasena>.campo {
   display: contents;
 }
 
-.login-page__contrasena .campo > label {
+.login-page__contrasena .campo>label {
   grid-column: 1;
   grid-row: 1;
 }
@@ -381,6 +467,7 @@
     opacity: 0;
     transform: translateY(8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -476,7 +563,11 @@
     animation: none;
   }
 
-  .login-page__formulario > .boton[aria-busy="true"]::before {
+  .login-page__slider-pista {
+    transition: none;
+  }
+
+  .login-page__formulario>.boton[aria-busy="true"]::before {
     animation-duration: 1.5s;
   }
 }

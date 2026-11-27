@@ -523,8 +523,7 @@ export function RegistroNotasModal({
         }
 
         setMensaje(
-          `${notasGuardadas} ${
-            notasGuardadas === 1 ? "nota guardada" : "notas guardadas"
+          `${notasGuardadas} ${notasGuardadas === 1 ? "nota guardada" : "notas guardadas"
           } correctamente.`,
         );
       } else if (pestaña === "conducta") {
@@ -768,11 +767,10 @@ export function RegistroNotasModal({
                             />
                           ) : (
                             <div
-                              className={`registro-evaluaciones__campo ${
-                                campo.tipo === "texto"
+                              className={`registro-evaluaciones__campo ${campo.tipo === "texto"
                                   ? "registro-evaluaciones__campo--completo"
                                   : ""
-                              }`}
+                                }`}
                             >
                               <label htmlFor={campoId}>{campo.etiqueta}</label>
 

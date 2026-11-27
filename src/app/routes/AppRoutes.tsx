@@ -1,5 +1,6 @@
 import { Navigate, Outlet, Route, Routes } from "react-router";
 import { LoginPage } from "../../features/auth/pages/LoginPage";
+import { RecuperarContrasenaPage } from "../../features/auth/pages/RecuperarContrasenaPage";
 import type { LoginResponse } from "../../features/auth/auth.types";
 import { AdminLayout } from "../../layouts/admin/AdminLayout";
 import { AdminDashboardPage } from "../../features/dashboard/pages/AdminDashboardPage";
@@ -62,6 +63,13 @@ export function AppRoutes({ sesion, onLogin, onLogout }: AppRoutesProps) {
           ) : (
             <LoginPage onLogin={onLogin} />
           )
+        }
+      />
+
+      <Route
+        path="/recuperar-contrasena"
+        element={
+          sesion ? <Navigate to={rutaInicial} replace /> : <RecuperarContrasenaPage />
         }
       />
 
